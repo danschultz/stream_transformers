@@ -1,0 +1,11 @@
+name: stream_transformers
+description: >
+  A Dart package for transforming streams.
+version: 0.0.1
+author: Dan Schultz <schultz.t.dan@gmail.com>
+homepage: https://www.github.com/frappe-dart/stream_transformers
+#dependencies:
+#  lib_name: any
+dev_dependencies:
+  guinness: '>=0.1.16 <0.2.0'
+  unittest: '>=0.11.4 <0.12.0'
