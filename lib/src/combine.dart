@@ -25,7 +25,7 @@ class Combine<A, B, R> implements StreamTransformer<A, R> {
   /// Combines a list of stream together, where the returned stream will contain
   /// `List`s that contain the current values of each of the streams.
   static Stream<List> all(List<Stream> streams) {
-    return bindStream(onListen: (EventSink<List> sink) {
+    return _bindStream(onListen: (EventSink<List> sink) {
       Stream<List> merged = Merge.all(streams.map((stream) => stream.map((event) => [stream, event])));
       Stream<Map<Stream, Object>> values = merged.transform(new Scan<Map<Stream, Object>>({}, (previous, current) {
         var values = new Map.from(previous);
@@ -48,7 +48,7 @@ class Combine<A, B, R> implements StreamTransformer<A, R> {
     _combiner = combiner;
 
   Stream<R> bind(Stream<A> stream) {
-    return bindStream(like: stream, onListen: (EventSink<R> sink) {
+    return _bindStream(like: stream, onListen: (EventSink<R> sink) {
       return Combine.all([stream, _other]).listen((values) => sink.add(_combiner(values.first, values.last)));
     });
   }

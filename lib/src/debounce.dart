@@ -44,6 +44,6 @@ class Debounce<T> implements StreamTransformer<T, T> {
       }, onError: sink.addError);
     }
 
-    return bindStream(like: stream, onListen: onListen);
+    return _bindStream(like: stream, onListen: onListen);
   }
 }

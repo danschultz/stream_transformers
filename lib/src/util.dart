@@ -1,6 +1,6 @@
 part of stream_transformers;
 
-Stream bindStream({Stream like, StreamSubscription onListen(EventSink sink), void onDone(), Future onCancel()}) {
+Stream _bindStream({Stream like, StreamSubscription onListen(EventSink sink), void onDone(), Future onCancel()}) {
   StreamSubscription subscription;
   StreamController controller;
 
@@ -36,7 +36,7 @@ StreamController _createControllerLikeStream({Stream stream, void onListen(), vo
   }
 }
 
-Future cancelSubscriptions(Iterable<StreamSubscription> subscriptions) {
+Future _cancelSubscriptions(Iterable<StreamSubscription> subscriptions) {
   var futures = subscriptions
       .map((subscription) => subscription.cancel())
       .where((future) => future != null);

@@ -27,7 +27,7 @@ class Scan<T> implements StreamTransformer {
     _combine = combine;
 
   Stream<T> bind(Stream<T> stream) {
-    return bindStream(like: stream, onListen: (EventSink<T> sink) {
+    return _bindStream(like: stream, onListen: (EventSink<T> sink) {
       var value = _initialValue;
       return stream.listen((data) {
         value = _combine(value, data);

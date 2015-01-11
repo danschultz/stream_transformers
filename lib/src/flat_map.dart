@@ -31,8 +31,8 @@ class FlatMap<S, T> implements StreamTransformer {
       });
     };
 
-    var cleanup = () => cancelSubscriptions(subscriptions).then((_) => subscriptions.clear());
+    var cleanup = () => _cancelSubscriptions(subscriptions).then((_) => subscriptions.clear());
 
-    return bindStream(like: stream, onListen: onListen, onDone: () => cleanup(), onCancel: () => cleanup());
+    return _bindStream(like: stream, onListen: onListen, onDone: () => cleanup(), onCancel: () => cleanup());
   }
 }
