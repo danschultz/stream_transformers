@@ -141,7 +141,7 @@ Reduces the values of a stream into a single value by using an initial value and
     clickCount.listen(print);
 
     // [button click] .. prints: 1
-    // [button click] ... prints: 2
+    // [button click] .. prints: 2
 
 ### `SkipUntil`
 Waits to deliver events from a stream until the signal `Future` completes. Errors that happen on the source stream will be forwarded once the `Future` completes. If the source stream is a broadcast stream, then the transformed stream will also be a broadcast stream.
@@ -182,6 +182,8 @@ Delivers events from the source stream until the signal `Future` completes. At w
 ### `When`
 Starts delivering events from the source stream when the signal stream delivers a value of `true`. Events are skipped when the signal stream delivers a value of `false`. Errors from the source stream will be forwarded to the transformed stream. If the source stream is a broadcast stream, then the transformed stream will also be a broadcast stream.
 
+**Example:**
+
     var controller = new StreamController();
     var signal = new StreamController();
 
@@ -197,6 +199,8 @@ Starts delivering events from the source stream when the signal stream delivers 
 
 ### `Zip`
 Combines the events of two streams into one by invoking a combiner function that is invoked when each stream delivers an event at each index. The transformed stream finishes when either source stream finishes. Errors from either stream will be forwarded to the transformed stream. If the source stream is a broadcast stream, then the transformed stream will also be a broadcast stream.
+
+**Example:**
 
     var controller1 = new StreamController();
     var controller2 = new StreamController();

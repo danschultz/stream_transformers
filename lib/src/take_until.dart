@@ -1,5 +1,26 @@
 part of stream_transformers;
 
+/// Delivers events from the source stream until the signal `Future` completes.
+/// At which point, the transformed stream closes. This is useful for automatically
+/// cancelling a stream subscription to prevent memory leaks. Errors that happen
+/// on the source stream will be forwarded to the transformed stream. If the source
+/// stream is a broadcast stream, then the transformed stream will also be a
+/// broadcast stream.
+///
+/// **Example:**
+///
+///   var completer = new Completer();
+///   var controller = new StreamController();
+///
+///   var takeUntil = controller.stream.transform(new TakeUntil(completer.future));
+///
+///   takeUntil.listen(print);
+///
+///   controller.add(1); // Prints: 1
+///   controller.add(2); // Prints: 2
+///   completer.complete();
+///   controller.add(3);
+///   controller.add(4);
 class TakeUntil<T> implements StreamTransformer<T, T> {
   final Future _signal;
 

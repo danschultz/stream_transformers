@@ -1,5 +1,26 @@
 part of stream_transformers;
 
+/// Pauses the delivery of events from the source stream when the signal stream
+/// delivers a value of `true`. The buffered events are delivered when the signal
+/// delivers a value of `false`. Errors originating from the source stream will
+/// not buffered. Errors originating from the signal stream are unhandled. If the
+/// source stream is a broadcast stream, then the transformed stream will also be
+/// a broadcast stream.
+///
+/// **Example:**
+///
+///   var controller = new StreamController();
+///   var signal = new StreamController();
+///
+///   var stream = controller.stream;
+///
+///   var buffered = stream.transform(new BufferWhen(signal.stream));
+///
+///   controller.add(1);
+///   signal.add(true);
+///   controller.add(2);
+///
+///   buffered.listen(print); // Prints: 1
 class BufferWhen<T> implements StreamTransformer {
   final Stream<bool> _signal;
 

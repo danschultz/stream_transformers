@@ -1,5 +1,18 @@
 part of stream_transformers;
 
+/// Similar to `FlatMap`, but instead of including events from all spawned
+/// streams, only includes the ones from the latest stream. Think of this
+/// as stream switching.
+///
+/// **Example:**
+///
+///   var controller = new StreamController();
+///   var latest = controller.stream.transform(new FlatMap((value) => new Stream.fromIterable([value + 1]));
+///
+///   latest.listen(print);
+///
+///   controller.add(1);
+///   controller.add(2); // Prints: 3
 class FlatMapLatest<S, T> implements StreamTransformer<S, T> {
   final StreamConverter<S, T> _convert;
 
