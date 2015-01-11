@@ -216,9 +216,16 @@ Combines the events of two streams into one by invoking a combiner function that
     controller2.add(2); // Prints 4
     controller2.add(3); // Prints 6
 
+## Running Tests
+Tests are run using [test_runner].
+
+* Install *test_runner*: `pub global activate test_runner`
+* Run *test_runner* inside *stream_transformers*: `pub global run run_tests`
+
 ## Features and bugs
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
 [tracker]: https://github.com/frappe-dart/stream_transformers/issues
 [Frappe]: https://github.com/danschultz/frappe
+[test_runner]: https://pub.dartlang.org/packages/test_runner
