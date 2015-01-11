@@ -1,9 +1,9 @@
 part of stream_transformers;
 
 class BufferWhen<T> implements StreamTransformer {
-  final Stream _signal;
+  final Stream<bool> _signal;
 
-  BufferWhen(Stream signal) : _signal = signal;
+  BufferWhen(Stream<bool> signal) : _signal = signal;
 
   Stream<T> bind(Stream<T> stream) {
     StreamSubscription signalSubscription;
