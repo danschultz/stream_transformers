@@ -6,18 +6,18 @@ These transformers are used internally by [Frappe]. If you're looking for a more
 
 ## Transformers
 
-* [bufferWhen](#bufferwhen)
-* [combine](#combine)
-* [debounce](#debounce)
-* [delay](#delay)
-* [flatMap](#flatmap)
-* [flatMapLatest](#flatmaplatest)
-* [merge](#merge)
-* [scan](#scan)
-* [skipUntil](#skipuntil)
-* [takeUntil](#takeuntil)
-* [when](#when)
-* [zip](#zip)
+* [BufferWhen](#bufferwhen)
+* [Combine](#combine)
+* [Debounce](#debounce)
+* [Delay](#delay)
+* [FlatMap](#flatmap)
+* [FlatMapLatest](#flatmaplatest)
+* [Merge](#merge)
+* [Scan](#scan)
+* [SkipUntil](#skipuntil)
+* [TakeUntil](#takeuntil)
+* [When](#when)
+* [Zip](#zip)
 
 ### `BufferWhen`
 Pauses the delivery of events from the source stream when the signal stream delivers a value of `true`. The buffered events are delivered when the signal delivers a value of `false`. Errors originating from the source stream will not buffered. Errors originating from the signal stream are unhandled. If the source stream is a broadcast stream, then the transformed stream will also be a broadcast stream.
