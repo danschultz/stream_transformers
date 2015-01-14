@@ -6,11 +6,21 @@ import 'package:stream_transformers/stream_transformers.dart';
 import 'util.dart';
 
 void main() => describe("Zip", () {
+  describe("with single subscription stream", () {
+    testWithStreamController(() => new StreamController());
+  });
+
+  describe("with broadcast stream", () {
+    testWithStreamController(() => new StreamController.broadcast());
+  });
+});
+
+void testWithStreamController(StreamController provider()) {
   StreamController controllerA;
   StreamController controllerB;
 
   beforeEach(() {
-    controllerA = new StreamController();
+    controllerA = provider();
     controllerB = new StreamController();
   });
 
@@ -42,4 +52,9 @@ void main() => describe("Zip", () {
     controllerB.close();
     return stream.isEmpty;
   });
-});
+
+  it("returns a stream of the same type", () {
+    var stream = controllerA.stream.transform(new Zip(controllerB.stream, (a, b) => a + b));
+    expect(stream.isBroadcast).toBe(controllerA.stream.isBroadcast);
+  });
+}

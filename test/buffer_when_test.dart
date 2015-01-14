@@ -6,11 +6,21 @@ import 'package:stream_transformers/stream_transformers.dart';
 import 'util.dart';
 
 void main() => describe("BufferWhen", () {
+  describe("with single subscription stream", () {
+    testWithStreamController(() => new StreamController());
+  });
+
+  describe("with broadcast stream", () {
+    testWithStreamController(() => new StreamController.broadcast());
+  });
+});
+
+void testWithStreamController(StreamController provider()) {
   StreamController controller;
   StreamController signal;
 
   beforeEach(() {
-    controller = new StreamController();
+    controller = provider();
     signal = new StreamController();
   });
 
@@ -40,4 +50,9 @@ void main() => describe("BufferWhen", () {
         },
         expectation: (values) => expect(values).toEqual([1, 2, 3]));
   });
-});
+
+  it("returns a stream of the same type", () {
+    var stream = controller.stream.transform(new BufferWhen(signal.stream));
+    expect(stream.isBroadcast).toBe(controller.stream.isBroadcast);
+  });
+}

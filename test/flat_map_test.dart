@@ -6,14 +6,24 @@ import 'package:stream_transformers/stream_transformers.dart';
 import 'util.dart';
 
 void main() => describe("FlatMap", () {
+  describe("with single subscription stream", () {
+    testWithStreamController(() => new StreamController());
+  });
+
+  describe("with broadcast stream", () {
+    testWithStreamController(() => new StreamController.broadcast());
+  });
+});
+
+void testWithStreamController(StreamController provider()) {
   StreamController controller;
   Map<int, StreamController> spawnedControllers;
 
   beforeEach(() {
-    controller = new StreamController();
+    controller = provider();
     spawnedControllers = {
-      1: new StreamController(),
-      2: new StreamController()
+        1: new StreamController(),
+        2: new StreamController()
     };
   });
 
@@ -38,4 +48,9 @@ void main() => describe("FlatMap", () {
     controller..add(1)..close();
     return stream.toList().then((values) => expect(values).toEqual([]));
   });
-});
+
+  it("returns a stream of the same type", () {
+    var stream = controller.stream.transform(new FlatMap((value) => new Stream.fromIterable([])));
+    expect(stream.isBroadcast).toBe(controller.stream.isBroadcast);
+  });
+}

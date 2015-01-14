@@ -6,11 +6,21 @@ import 'package:stream_transformers/stream_transformers.dart';
 import 'util.dart';
 
 void main() => describe("TakeUntil", () {
+  describe("with single subscription stream", () {
+    testWithStreamController(() => new StreamController());
+  });
+
+  describe("with broadcast stream", () {
+    testWithStreamController(() => new StreamController.broadcast());
+  });
+});
+
+void testWithStreamController(StreamController provider()) {
   StreamController controller;
   Completer signal;
 
   beforeEach(() {
-    controller = new StreamController();
+    controller = provider();
     signal = new Completer();
   });
 
@@ -34,4 +44,9 @@ void main() => describe("TakeUntil", () {
         behavior: () => controller.close(),
         expectation: (values) => expect(values).toEqual([]));
   });
-});
+
+  it("returns a stream of the same type", () {
+    var stream = controller.stream.transform(new TakeUntil(signal.future));
+    expect(stream.isBroadcast).toBe(controller.stream.isBroadcast);
+  });
+}

@@ -6,11 +6,21 @@ import 'package:stream_transformers/stream_transformers.dart';
 import 'util.dart';
 
 void main() => describe("When", () {
+  describe("with single subscription stream", () {
+    testWithStreamController(() => new StreamController());
+  });
+
+  describe("with broadcast stream", () {
+    testWithStreamController(() => new StreamController.broadcast());
+  });
+});
+
+void testWithStreamController(StreamController provider()) {
   StreamController controller;
   StreamController toggle;
 
   beforeEach(() {
-    controller = new StreamController();
+    controller = provider();
     toggle = new StreamController();
   });
 
@@ -39,4 +49,9 @@ void main() => describe("When", () {
         }),
         expectation: (values) => expect(values).toEqual([2]));
   });
-});
+
+  it("returns a stream of the same type", () {
+    var stream = controller.stream.transform(new When(toggle.stream));
+    expect(stream.isBroadcast).toBe(controller.stream.isBroadcast);
+  });
+}

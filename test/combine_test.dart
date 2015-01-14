@@ -6,11 +6,21 @@ import 'package:stream_transformers/stream_transformers.dart';
 import 'util.dart';
 
 void main() => describe("Combine", () {
+  describe("with a single subscription stream", () {
+    testWithStreamController(() => new StreamController());
+  });
+
+  describe("with a broadcast stream", () {
+    testWithStreamController(() => new StreamController.broadcast());
+  });
+});
+
+void testWithStreamController(StreamController providerA()) {
   StreamController controllerA;
   StreamController controllerB;
 
   beforeEach(() {
-    controllerA = new StreamController();
+    controllerA = providerA();
     controllerB = new StreamController();
   });
 
@@ -47,4 +57,9 @@ void main() => describe("Combine", () {
         },
         expectation: (values) => expect(values).toEqual([]));
   });
-});
+
+  it("returns a stream of the same type", () {
+    var stream = controllerA.stream.transform(new Combine(controllerB.stream, (a, b) => a + b));
+    expect(stream.isBroadcast).toBe(controllerA.stream.isBroadcast);
+  });
+}

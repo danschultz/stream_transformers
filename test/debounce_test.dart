@@ -7,11 +7,21 @@ import 'package:stream_transformers/stream_transformers.dart';
 import 'util.dart';
 
 void main() => describe("Debounce", () {
+  describe("with single subscription stream", () {
+    testWithStreamController(() => new StreamController());
+  });
+
+  describe("with broadcast stream", () {
+    testWithStreamController(() => new StreamController.broadcast());
+  });
+});
+
+void testWithStreamController(StreamController provider()) {
   StreamController controller;
   Duration duration;
 
   beforeEach(() {
-    controller = new StreamController();
+    controller = provider();
     duration = new Duration(milliseconds: 50);
   });
 
@@ -30,8 +40,9 @@ void main() => describe("Debounce", () {
 
   it("closes transformed stream when source stream is done", () {
     var stream = controller.stream.transform(new Debounce(duration));
+    var result = stream.toList();
     controller..add(1)..close();
-    return stream.toList().then((values) {
+    return result.then((values) {
       expect(values).toEqual([1]);
     });
   });
@@ -44,4 +55,9 @@ void main() => describe("Debounce", () {
     }));
     controller..addError(1)..addError(2)..addError(3)..close();
   });
-});
+
+  it("returns a stream of the same type", () {
+    var stream = controller.stream.transform(new Debounce(duration));
+    expect(stream.isBroadcast).toBe(controller.stream.isBroadcast);
+  });
+}
