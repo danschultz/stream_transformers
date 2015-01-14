@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.0+1 (01/14/2015)
+- Fixed an issue where `When` and `Zip` transformers would not return the same stream type.
+
 ## 0.1.0 (01/10/2015)
 Initial version
 
