@@ -1,6 +1,6 @@
 # stream_transformers
 
-This library provides a set of stream transformer for Dart's `Stream` class.
+This library provides a set of stream transformers for Dart's `Stream` class.
 
 These transformers are used internally by [Frappe]. If you're looking for a more featured functional reactive programming (FRP) library for Dart, you should look there.
 
