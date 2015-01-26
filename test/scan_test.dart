@@ -32,13 +32,13 @@ void testWithStreamController(StreamController provider()) {
           controller.add(1);
           controller.add(2);
         },
-        expectation: (values) => expect(values).toEqual([1, 3]));
+        expectation: (values) => expect(values).toEqual([0, 1, 3]));
   });
 
   it("closes transformed stream when source stream is done", () {
     var stream = controller.stream.transform(new Scan(0, (a, b) => a + b));
     controller..close();
-    return stream.toList().then((values) => expect(values).toEqual([]));
+    return stream.toList().then((values) => expect(values).toEqual([0]));
   });
 
   it("returns a stream of the same type", () {
