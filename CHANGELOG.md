@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.0+3 (01/25/2015)
+- Fixed [issue #6](https://github.com/danschultz/stream_transformers/issues/6) where `Scan` doesn't include the initial value in the transformed stream.
+
 ## 0.1.0+1 (01/14/2015)
 - Fixed an issue where `When` and `Zip` transformers would not return the same stream type.
 
