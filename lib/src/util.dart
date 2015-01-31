@@ -1,26 +1,18 @@
 part of stream_transformers;
 
-Stream _bindStream({Stream like, StreamSubscription onListen(EventSink sink), void onDone(), Future onCancel()}) {
+Stream _bindStream({Stream like, StreamSubscription onListen(EventSink sink), onCancel()}) {
   StreamSubscription subscription;
   StreamController controller;
 
   controller = _createControllerLikeStream(
       stream: like,
-      onListen: () {
-        subscription = onListen(controller);
-        subscription.onDone(() {
-          if (onDone != null) {
-            onDone();
-          }
-          controller.close();
-        });
-      },
+      onListen: () => subscription = onListen(controller),
       onPause: () => subscription.pause(),
       onResume: () => subscription.resume(),
       onCancel: () {
         var futures = [onCancel, subscription.cancel]
             .where((function) => function != null)
-            .map((function) => function())
+            .map((function) => new Future(() => function()))
             .where((future) => future != null);
         return Future.wait(futures);
       });
