@@ -50,6 +50,16 @@ void testWithStreamController(StreamController provider()) {
         expectation: (values) => expect(values).toEqual([2]));
   });
 
+  it("forwards errors from source and toggle stream", () {
+    return testErrorsAreForwarded(
+        controller.stream.transform(new When(toggle.stream)),
+        behavior: () {
+          controller.addError(1);
+          toggle.addError(2);
+        },
+        expectation: (errors) => expect(errors).toEqual([1, 2]));
+  });
+
   it("returns a stream of the same type", () {
     var stream = controller.stream.transform(new When(toggle.stream));
     expect(stream.isBroadcast).toBe(controller.stream.isBroadcast);

@@ -48,12 +48,12 @@ void testWithStreamController(StreamController provider()) {
   });
 
   it("doesn't debounce errors", () {
-    var errors = [];
-    var stream = controller.stream.transform(new Debounce(duration));
-    var subscription = stream.listen((_) {}, onError: (e) => errors.add(e), onDone: expectAsync(() {
-      expect(errors).toEqual([1, 2, 3]);
-    }));
-    controller..addError(1)..addError(2)..addError(3)..close();
+    return testErrorsAreForwarded(
+        controller.stream.transform(new Debounce(duration)),
+        behavior: () {
+          controller..addError(1)..addError(2)..addError(3)..close();
+        },
+        expectation: (errors) => expect(errors).toEqual([1, 2, 3]));
   });
 
   it("returns a stream of the same type", () {

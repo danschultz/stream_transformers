@@ -43,6 +43,7 @@ class Zip<A, B, R> implements StreamTransformer<A, R> {
 
     var done = new Stream.fromIterable([_done(input), _done(other)])
         .transform(new FlatMap((future) => new Stream.fromFuture(future)))
+        .handleError((e) => e)
         .take(1);
 
     return _bindStream(like: stream, onListen: (EventSink<R> sink) {
@@ -50,7 +51,7 @@ class Zip<A, B, R> implements StreamTransformer<A, R> {
           .where((queues) => queues.first.isNotEmpty && queues.last.isNotEmpty)
           .map((queues) => _combiner(queues.first.removeFirst(), queues.last.removeFirst()))
           .transform(new TakeUntil(done))
-          .listen((value) => sink.add(value), onDone: () => sink.close());
+          .listen((value) => sink.add(value), onError: sink.addError, onDone: () => sink.close());
     });
   }
 }

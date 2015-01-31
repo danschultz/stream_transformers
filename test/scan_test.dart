@@ -43,12 +43,12 @@ void testWithStreamController(StreamController provider()) {
   });
 
   it("forwards errors from source stream", () {
-    var errors = [];
-    var stream = controller.stream.transform(new Scan(0, (a, b) => a + b));
-    var subscription = stream.listen((_) {}, onError: (e) => errors.add(e), onDone: expectAsync(() {
-      expect(errors).toEqual([1]);
-    }));
-    controller..addError(1)..close();
+    return testErrorsAreForwarded(
+        controller.stream.transform(new Scan(0, (a, b) => a + b)),
+        behavior: () {
+          controller..addError(1)..close();
+        },
+        expectation: (errors) => expect(errors).toEqual([1]));
   });
 
   it("returns a stream of the same type", () {

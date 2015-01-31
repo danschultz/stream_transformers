@@ -2,8 +2,9 @@ part of stream_transformers;
 
 /// Waits to deliver events from a stream until the signal `Stream` delivers a
 /// value. Errors that happen on the source stream will be forwarded once the
-/// `Stream` delivers its value. If the source stream is a broadcast stream,
-/// then the transformed stream will also be a broadcast stream.
+/// `Stream` delivers its value. Errors happening on the signal stream will be
+/// forwarded immediately. If the source stream is a broadcast stream, then the
+/// transformed stream will also be a broadcast stream.
 ///
 /// **Example:**
 ///

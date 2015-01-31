@@ -2,7 +2,7 @@ part of stream_transformers;
 
 /// Starts delivering events from the source stream when the signal stream
 /// delivers a value of `true`. Events are skipped when the signal stream
-/// delivers a value of `false`. Errors from the source stream will be
+/// delivers a value of `false`. Errors from the source or toggle stream will be
 /// forwarded to the transformed stream. If the source stream is a broadcast
 /// stream, then the transformed stream will also be a broadcast stream.
 ///
@@ -26,14 +26,14 @@ class When<T> implements StreamTransformer<T, T> {
   When(Stream<bool> toggle) : _toggle = toggle;
 
   Stream<T> bind(Stream<T> stream) {
-    var broadcastStream = stream.asBroadcastStream();
+    var input = stream.asBroadcastStream();
     return _bindStream(like: stream, onListen: (EventSink<T> sink) {
       return _toggle
           .transform(new FlatMapLatest((isToggled) {
-            return isToggled ? broadcastStream : new Stream.fromIterable([]);
+            return isToggled ? input : new Stream.fromIterable([]);
           }))
-          .transform(new TakeUntil.fromFuture(broadcastStream.length))
-          .listen((value) => sink.add(value));
+          .transform(new TakeUntil.fromFuture(input.length))
+          .listen((value) => sink.add(value), onError: sink.addError);
     });
   }
 }

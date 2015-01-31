@@ -1,7 +1,7 @@
 part of stream_transformers;
 
 /// Combines the events from two streams into a single stream. Errors occurring
-/// on a source stream will be forwarded to the transformed stream. If the
+/// on any merged stream will be forwarded to the transformed stream. If the
 /// source stream is a broadcast stream, then the transformed stream will also
 /// be a broadcast stream.
 ///

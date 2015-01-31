@@ -36,6 +36,7 @@ class FlatMap<S, T> implements StreamTransformer {
         openStreams.add(mappedStream);
         subscriptions.add(mappedStream.listen(
             (event) => sink.add(event),
+            onError: sink.addError,
             onDone: () {
               openStreams.remove(mappedStream);
               closeSinkIfDone(sink, openStreams);

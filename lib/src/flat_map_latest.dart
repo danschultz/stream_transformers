@@ -6,13 +6,13 @@ part of stream_transformers;
 ///
 /// **Example:**
 ///
-///   var controller = new StreamController();
-///   var latest = controller.stream.transform(new FlatMap((value) => new Stream.fromIterable([value + 1]));
+///     var controller = new StreamController();
+///     var latest = controller.stream.transform(new FlatMapLatest((value) => new Stream.fromIterable([value + 1]));
 ///
-///   latest.listen(print);
+///     latest.listen(print);
 ///
-///   controller.add(1);
-///   controller.add(2); // Prints: 3
+///     controller.add(1);
+///     controller.add(2); // Prints: 3
 class FlatMapLatest<S, T> implements StreamTransformer<S, T> {
   final StreamConverter<S, T> _convert;
 
@@ -22,8 +22,9 @@ class FlatMapLatest<S, T> implements StreamTransformer<S, T> {
     var input = stream.asBroadcastStream();
 
     return _bindStream(like: stream, onListen: (EventSink<T> sink) {
+      var done = input.handleError((e) => e);
       return input
-          .transform(new FlatMap((value) => _convert(value).transform(new TakeUntil(input))))
+          .transform(new FlatMap((value) => _convert(value).transform(new TakeUntil(done))))
           .listen((value) => sink.add(value), onError: sink.addError, onDone: () => sink.close());
     });
   }

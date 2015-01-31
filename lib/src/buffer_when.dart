@@ -2,10 +2,10 @@ part of stream_transformers;
 
 /// Pauses the delivery of events from the source stream when the signal stream
 /// delivers a value of `true`. The buffered events are delivered when the signal
-/// delivers a value of `false`. Errors originating from the source stream will
-/// not buffered. Errors originating from the signal stream are unhandled. If the
-/// source stream is a broadcast stream, then the transformed stream will also be
-/// a broadcast stream.
+/// delivers a value of `false`. Errors originating from the source and signal
+/// streams will be forwarded to the transformed stream and will not be buffered.
+/// If the source stream is a broadcast stream, then the transformed stream will
+/// also be a broadcast stream.
 ///
 /// **Example:**
 ///

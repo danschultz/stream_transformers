@@ -21,3 +21,10 @@ Future testStream(Stream stream, {behavior(), expectation(List values)}) {
   }))
   .then((_) => expectation(results));
 }
+
+Future testErrorsAreForwarded(Stream stream, {behavior(), expectation(List errors)}) {
+  var errors = [];
+  return testStream(stream.handleError((e) => errors.add(e)),
+      behavior: behavior,
+      expectation: (_) => expectation(errors));
+}

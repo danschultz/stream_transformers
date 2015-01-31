@@ -75,6 +75,16 @@ void testWithStreamController(StreamController provider()) {
         expectation: (values) => Future.wait(completers.map((completer) => completer.future)));
   });
 
+  it("forwards errors from source and spawned stream", () {
+    return testErrorsAreForwarded(
+        controller.stream.transform(new FlatMapLatest((value) => spawnedControllers[value].stream)),
+        behavior: () {
+          controller..add(1)..addError(1);
+          spawnedControllers[1].addError(2);
+        },
+        expectation: (errors) => expect(errors).toEqual([1, 2]));
+  });
+
   it("returns a stream of the same type", () {
     var stream = controller.stream.transform(new FlatMapLatest((value) => new Stream.fromIterable([])));
     expect(stream.isBroadcast).toBe(controller.stream.isBroadcast);

@@ -59,6 +59,16 @@ void testWithStreamController(StreamController provider()) {
     return stream.isEmpty;
   });
 
+  it("forwards errors from source and toggle stream", () {
+    return testErrorsAreForwarded(
+        controllerA.stream.transform(new Zip(controllerB.stream, (a, b) => a + b)),
+        behavior: () {
+          controllerA.addError(1);
+          controllerB.addError(2);
+        },
+        expectation: (errors) => expect(errors).toEqual([1, 2]));
+  });
+
   it("returns a stream of the same type", () {
     var stream = controllerA.stream.transform(new Zip(controllerB.stream, (a, b) => a + b));
     expect(stream.isBroadcast).toBe(controllerA.stream.isBroadcast);
