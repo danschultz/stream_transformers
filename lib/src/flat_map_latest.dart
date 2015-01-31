@@ -14,9 +14,9 @@ part of stream_transformers;
 ///     controller.add(1);
 ///     controller.add(2); // Prints: 3
 class FlatMapLatest<S, T> implements StreamTransformer<S, T> {
-  final StreamConverter<S, T> _convert;
+  final Mapper<S, Stream<T>> _convert;
 
-  FlatMapLatest(StreamConverter<S, T> convert) : _convert = convert;
+  FlatMapLatest(Mapper<S, Stream<T>> convert) : _convert = convert;
 
   Stream<T> bind(Stream<S> stream) {
     var input = stream.asBroadcastStream();

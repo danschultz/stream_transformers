@@ -15,9 +15,9 @@ part of stream_transformers;
 ///     controller.add(1); // Prints: 2
 ///     controller.add(2); // Prints: 3
 class FlatMap<S, T> implements StreamTransformer {
-  final StreamConverter<S, T> _convert;
+  final Mapper<S, Stream<T>> _convert;
 
-  FlatMap(StreamConverter<S, T> convert) : _convert = convert;
+  FlatMap(Mapper<S, Stream<T>> convert) : _convert = convert;
 
   Stream<T> bind(Stream<S> stream) {
     var subscriptions = new Queue<StreamSubscription>();
