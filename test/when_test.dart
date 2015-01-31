@@ -50,6 +50,16 @@ void testWithStreamController(StreamController provider()) {
         expectation: (values) => expect(values).toEqual([2]));
   });
 
+  it("doesn't close when signal stream closes", () {
+    return testStream(controller.stream.transform(new When(toggle.stream)),
+        behavior: () => new Future(() {
+          controller.add(1);
+          toggle..add(true)..close();
+          return new Future(() => controller.add(2));
+        }),
+        expectation: (values) => expect(values).toEqual([2]));
+  });
+
   it("forwards errors from source and toggle stream", () {
     return testErrorsAreForwarded(
         controller.stream.transform(new When(toggle.stream)),
