@@ -7,13 +7,13 @@ part of stream_transformers;
 ///
 /// **Example:**
 ///
-///   var controller = new StreamController();
-///   var flapMapped = controller.stream.transform(new FlatMap((value) => new Stream.fromIterable([value + 1]));
+///     var controller = new StreamController();
+///     var flapMapped = controller.stream.transform(new FlatMap((value) => new Stream.fromIterable([value + 1]));
 ///
-///   flatMapped.listen(print);
+///     flatMapped.listen(print);
 ///
-///   controller.add(1); // Prints: 2
-///   controller.add(2); // Prints: 3
+///     controller.add(1); // Prints: 2
+///     controller.add(2); // Prints: 3
 class FlatMap<S, T> implements StreamTransformer {
   final StreamConverter<S, T> _convert;
 
@@ -22,17 +22,38 @@ class FlatMap<S, T> implements StreamTransformer {
   Stream<T> bind(Stream<S> stream) {
     var subscriptions = new Queue<StreamSubscription>();
 
-    var onListen = (EventSink<T> sink) {
-      return stream.listen((data) {
+    StreamSubscription onListen(EventSink<T> sink) {
+      var openStreams = <Stream>[];
+
+      void closeSinkIfDone(EventSink sink, Iterable<Stream> streams) {
+        if (streams.isEmpty) {
+          sink.close();
+        }
+      }
+
+      void onData(data) {
         Stream<T> mappedStream = _convert(data);
-        subscriptions.add(mappedStream.listen((event) {
-          sink.add(event);
-        }, onError: sink.addError));
-      });
+        openStreams.add(mappedStream);
+        subscriptions.add(mappedStream.listen(
+            (event) => sink.add(event),
+            onDone: () {
+              openStreams.remove(mappedStream);
+              closeSinkIfDone(sink, openStreams);
+            }));
+      }
+
+      return stream.listen(
+          onData,
+          onDone: () => closeSinkIfDone(sink, openStreams),
+          onError: (error, stackTrace) => sink.addError(error, stackTrace));
     };
 
-    var cleanup = () => _cancelSubscriptions(subscriptions).then((_) => subscriptions.clear());
+    void onCancel() {
+      while (subscriptions.isNotEmpty) {
+        subscriptions.removeFirst().cancel();
+      }
+    }
 
-    return _bindStream(like: stream, onListen: onListen, onDone: () => cleanup(), onCancel: () => cleanup());
+    return _bindStream(like: stream, onListen: onListen, onCancel: onCancel);
   }
 }

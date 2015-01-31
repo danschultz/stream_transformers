@@ -43,10 +43,36 @@ void testWithStreamController(StreamController provider()) {
         expectation: (values) => expect(values).toEqual([4]));
   });
 
-  it("closes transformed stream when source stream is done", () {
-    var stream = controller.stream.transform(new FlatMapLatest((value) => spawnedControllers[value].stream));
+  it("doesn't close transformed stream when source stream is done and spawned streams are not done", () {
+    return testStream(controller.stream.transform(new FlatMapLatest((value) => spawnedControllers[value].stream)),
+        behavior: () {
+          controller..add(1)..close();
+          return new Future(() => spawnedControllers[1].add(1));
+        },
+        expectation: (values) => expect(values).toEqual([1]));
+  });
+
+  it("closes transformed stream when source stream is done and spawned streams are done", () {
+    var spawnedStream = new Stream.periodic(new Duration(milliseconds: 50), (i) => i).take(2);
+    var stream = controller.stream.transform(new FlatMapLatest((value) => spawnedStream));
+    var result = stream.toList();
+
     controller..add(1)..close();
-    return stream.toList().then((values) => expect(values).toEqual([]));
+
+    return result.then((values) => expect(values).toEqual([0, 1]));
+  });
+
+  it("cancels subscriptions from spawned stream when transformed stream's listener is cancelled", () {
+    var completers = <Completer>[new Completer(), new Completer()];
+    var controllers = <StreamController>[
+        new StreamController(onCancel: () => completers[0].complete()),
+        new StreamController(onCancel: () => completers[1].complete())];
+
+    return testStream(controller.stream.transform(new FlatMapLatest((value) => controllers[value].stream)),
+        behavior: () {
+          controller..add(0)..add(1)..close();
+        },
+        expectation: (values) => Future.wait(completers.map((completer) => completer.future)));
   });
 
   it("returns a stream of the same type", () {
