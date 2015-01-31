@@ -47,7 +47,13 @@ void testWithStreamController(StreamController provider()) {
         expectation: (values) => expect(values).toEqual([2, 4, 6]));
   });
 
-  it("returned stream closes when a source stream is done", () {
+  it("returned stream closes when source stream is done", () {
+    var stream = controllerA.stream.transform(new Zip(controllerB.stream, (a, b) => a + b));
+    controllerA.close();
+    return stream.isEmpty;
+  });
+
+  it("returned stream closes when other stream is done", () {
     var stream = controllerA.stream.transform(new Zip(controllerB.stream, (a, b) => a + b));
     controllerB.close();
     return stream.isEmpty;

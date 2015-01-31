@@ -3,6 +3,7 @@ library scan_test;
 import 'dart:async';
 import 'package:guinness/guinness.dart';
 import 'package:stream_transformers/stream_transformers.dart';
+import 'package:unittest/unittest.dart' show expectAsync;
 import 'util.dart';
 
 void main() => describe("Scan", () {
@@ -39,6 +40,15 @@ void testWithStreamController(StreamController provider()) {
     var stream = controller.stream.transform(new Scan(0, (a, b) => a + b));
     controller..close();
     return stream.toList().then((values) => expect(values).toEqual([0]));
+  });
+
+  it("forwards errors from source stream", () {
+    var errors = [];
+    var stream = controller.stream.transform(new Scan(0, (a, b) => a + b));
+    var subscription = stream.listen((_) {}, onError: (e) => errors.add(e), onDone: expectAsync(() {
+      expect(errors).toEqual([1]);
+    }));
+    controller..addError(1)..close();
   });
 
   it("returns a stream of the same type", () {
