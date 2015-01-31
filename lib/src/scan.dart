@@ -18,23 +18,25 @@ part of stream_transformers;
 ///
 ///   // [button click] .. prints: 1
 ///   // [button click] .. prints: 2
-class Scan<T> implements StreamTransformer {
-  final T _initialValue;
+class Scan<A, R> implements StreamTransformer {
+  final R _initialValue;
   final Function _combine;
 
-  Scan(T initialValue, T combine(T previous, T current)) :
+  Scan(R initialValue, R combine(R previous, A current)) :
     _initialValue = initialValue,
     _combine = combine;
 
-  Stream<T> bind(Stream<T> stream) {
-    return _bindStream(like: stream, onListen: (EventSink<T> sink) {
+  Stream<R> bind(Stream<A> stream) {
+    return _bindStream(like: stream, onListen: (EventSink<R> sink) {
       var value = _initialValue;
       sink.add(value);
 
-      return stream.listen((data) {
+      void onData(A data) {
         value = _combine(value, data);
         sink.add(value);
-      });
+      }
+
+      return stream.listen(onData, onError: sink.addError, onDone: sink.close);
     });
   }
 }
