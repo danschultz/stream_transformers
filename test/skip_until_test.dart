@@ -17,11 +17,11 @@ void main() => describe("SkipUntil", () {
 
 void testWithStreamController(StreamController provider()) {
   StreamController controller;
-  Completer signal;
+  StreamController signal;
 
   beforeEach(() {
     controller = provider();
-    signal = new Completer();
+    signal = new StreamController();
   });
 
   afterEach(() {
@@ -29,24 +29,27 @@ void testWithStreamController(StreamController provider()) {
   });
 
   it("doesn't include events until signal", () {
-    return testStream(controller.stream.transform(new SkipUntil(signal.future)),
+    return testStream(controller.stream.transform(new SkipUntil(signal.stream)),
         behavior: () => new Future(() {
           controller.add(1);
           controller.add(2);
-          signal.complete(true);
-          controller.add(3);
+
+          return new Future(() {
+            signal.add(true);
+            controller.add(3);
+          });
         }),
         expectation: (values) => expect(values).toEqual([3]));
   });
 
   it("closes transformed stream when source stream is done", () {
-    return testStream(controller.stream.transform(new SkipUntil(signal.future)),
+    return testStream(controller.stream.transform(new SkipUntil(signal.stream)),
         behavior: () => controller.close(),
         expectation: (values) => expect(values).toEqual([]));
   });
 
   it("returns a stream of the same type", () {
-    var stream = controller.stream.transform(new SkipUntil(signal.future));
+    var stream = controller.stream.transform(new SkipUntil(signal.stream));
     expect(stream.isBroadcast).toBe(controller.stream.isBroadcast);
   });
 }

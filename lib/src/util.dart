@@ -42,3 +42,5 @@ Future _cancelSubscriptions(Iterable<StreamSubscription> subscriptions) {
       .where((future) => future != null);
   return Future.wait(futures);
 }
+
+Future _done(Stream stream) => stream.length;

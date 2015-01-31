@@ -33,21 +33,24 @@ class Zip<A, B, R> implements StreamTransformer<A, R> {
   Stream<R> bind(Stream<A> stream) {
     Queue appendToQueue(Queue queue, element) => queue..add(element);
 
-    var broadcastStream = stream.asBroadcastStream();
+    var input = stream.asBroadcastStream();
     var other = _other.asBroadcastStream();
 
-    var bufferA = broadcastStream.transform(new Scan(new Queue<A>(), appendToQueue));
+    var bufferA = input.transform(new Scan(new Queue<A>(), appendToQueue));
     var bufferB = other.transform(new Scan(new Queue<B>(), appendToQueue));
 
     var combined = Combine.all([bufferA, bufferB]) as Stream<List<Queue>>;
+
+    var done = new Stream.fromIterable([_done(input), _done(other)])
+        .transform(new FlatMap((future) => new Stream.fromFuture(future)))
+        .take(1);
 
     return _bindStream(like: stream, onListen: (EventSink<R> sink) {
       return combined
           .where((queues) => queues.first.isNotEmpty && queues.last.isNotEmpty)
           .map((queues) => _combiner(queues.first.removeFirst(), queues.last.removeFirst()))
-          .transform(new TakeUntil(broadcastStream.length))
-          .transform(new TakeUntil(other.length))
-          .listen((value) => sink.add(value));
+          .transform(new TakeUntil(done))
+          .listen((value) => sink.add(value), onDone: () => sink.close());
     });
   }
 }

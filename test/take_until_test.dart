@@ -17,11 +17,11 @@ void main() => describe("TakeUntil", () {
 
 void testWithStreamController(StreamController provider()) {
   StreamController controller;
-  Completer signal;
+  StreamController signal;
 
   beforeEach(() {
     controller = provider();
-    signal = new Completer();
+    signal = new StreamController();
   });
 
   afterEach(() {
@@ -29,24 +29,32 @@ void testWithStreamController(StreamController provider()) {
   });
 
   it("includes events until signal", () {
-    return testStream(controller.stream.transform(new TakeUntil(signal.future)),
-        behavior: () => new Future(() {
-          controller.add(1);
-          controller.add(2);
-          signal.complete(true);
-          controller.add(3);
-        }),
+    return testStream(controller.stream.transform(new TakeUntil(signal.stream)),
+        behavior: () {
+          return new Future(() => controller..add(1)..add(2))
+              .then((_) => new Future(() => signal.add(true)))
+              .then((_) => controller.add(3));
+        },
         expectation: (values) => expect(values).toEqual([1, 2]));
   });
 
   it("closes transformed stream when source stream is done", () {
-    return testStream(controller.stream.transform(new TakeUntil(signal.future)),
-        behavior: () => controller.close(),
-        expectation: (values) => expect(values).toEqual([]));
+    var stream = controller.stream.transform(new TakeUntil(signal.stream));
+    var result = stream.toList();
+    controller.close();
+    return result.then((values) => expect(values).toEqual([]));
+  });
+
+  it("cancels signal subscription when transformed stream listener is cancelled", () {
+    var completer = new Completer();
+    var signal = new StreamController(onCancel: () => completer.complete());
+
+    return testStream(controller.stream.transform(new TakeUntil(signal.stream)),
+        expectation: (values) => completer.future);
   });
 
   it("returns a stream of the same type", () {
-    var stream = controller.stream.transform(new TakeUntil(signal.future));
+    var stream = controller.stream.transform(new TakeUntil(signal.stream));
     expect(stream.isBroadcast).toBe(controller.stream.isBroadcast);
   });
 }

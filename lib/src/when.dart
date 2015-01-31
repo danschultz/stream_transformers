@@ -32,7 +32,7 @@ class When<T> implements StreamTransformer<T, T> {
           .transform(new FlatMapLatest((isToggled) {
             return isToggled ? broadcastStream : new Stream.fromIterable([]);
           }))
-          .transform(new TakeUntil(broadcastStream.length))
+          .transform(new TakeUntil.fromFuture(broadcastStream.length))
           .listen((value) => sink.add(value));
     });
   }
