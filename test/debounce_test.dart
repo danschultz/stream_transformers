@@ -7,7 +7,7 @@ import 'package:stream_transformers/stream_transformers.dart';
 import 'util.dart';
 
 void main() => describe("Debounce", () {
-  describe("with single subscription stream", () {
+  xdescribe("with single subscription stream", () {
     testWithStreamController(() => new StreamController());
   });
 
@@ -29,13 +29,13 @@ void testWithStreamController(StreamController provider()) {
     controller.close();
   });
 
-  it("provides the first and last events after duration passes", () {
+  it("provides the last event after duration passes", () {
     return testStream(controller.stream.transform(new Debounce(duration)),
         behavior: () {
           controller..add(1)..add(2)..add(3);
-          return new Future.delayed(new Duration(seconds: 1), () {});
+          return new Future.delayed(duration * 2, () => true);
         },
-        expectation: (values) => expect(values).toEqual([1, 3]));
+        expectation: (values) => expect(values).toEqual([3]));
   });
 
   it("closes transformed stream when source stream is done", () {
