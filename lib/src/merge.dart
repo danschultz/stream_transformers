@@ -7,17 +7,17 @@ part of stream_transformers;
 ///
 /// **Example:**
 ///
-///   var controller1 = new StreamController();
-///   var controller2 = new StreamController();
+///     var controller1 = new StreamController();
+///     var controller2 = new StreamController();
 ///
-///   var merged = controller1.stream.transform(new Merge(controller2.stream));
+///     var merged = controller1.stream.transform(new Merge(controller2.stream));
 ///
-///   merged.listen(print);
+///     merged.listen(print);
 ///
-///   controller1.add(1); // Prints: 1
-///   controller2.add(2); // Prints: 2
-///   controller1.add(3); // Prints: 3
-///   controller2.add(4); // Prints: 4
+///     controller1.add(1); // Prints: 1
+///     controller2.add(2); // Prints: 2
+///     controller1.add(3); // Prints: 3
+///     controller2.add(4); // Prints: 4
 class Merge<S, T> implements StreamTransformer {
   /// Returns a stream that contains the events from a list of streams.
   static Stream all(Iterable<Stream> streams) {

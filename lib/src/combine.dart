@@ -10,17 +10,17 @@ part of stream_transformers;
 ///
 /// **Example:**
 ///
-///   var controller1 = new StreamController();
-///   var controller2 = new StreamController();
+///     var controller1 = new StreamController();
+///     var controller2 = new StreamController();
 ///
-///   var combined = controller1.stream.transform(new Combine(controller2.stream, (a, b) => a + b));
+///     var combined = controller1.stream.transform(new Combine(controller2.stream, (a, b) => a + b));
 ///
-///   combined.listen(print);
+///     combined.listen(print);
 ///
-///   controller1.add(1);
-///   controller2.add(1); // Prints: 2
-///   controller1.add(2); // Prints: 3
-///   controller2.add(2); // Prints: 4
+///     controller1.add(1);
+///     controller2.add(1); // Prints: 2
+///     controller1.add(2); // Prints: 3
+///     controller2.add(2); // Prints: 4
 class Combine<A, B, R> implements StreamTransformer<A, R> {
   /// Combines a list of stream together, where the returned stream will contain
   /// `List`s that contain the current values of each of the streams.

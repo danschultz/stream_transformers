@@ -9,18 +9,18 @@ part of stream_transformers;
 ///
 /// **Example:**
 ///
-///   var controller = new StreamController();
-///   var signal = new StreamController();
+///     var controller = new StreamController();
+///     var signal = new StreamController();
 ///
-///   var stream = controller.stream;
+///     var stream = controller.stream;
 ///
-///   var buffered = stream.transform(new BufferWhen(signal.stream));
+///     var buffered = stream.transform(new BufferWhen(signal.stream));
 ///
-///   controller.add(1);
-///   signal.add(true);
-///   controller.add(2);
+///     controller.add(1);
+///     signal.add(true);
+///     controller.add(2);
 ///
-///   buffered.listen(print); // Prints: 1
+///     buffered.listen(print); // Prints: 1
 class BufferWhen<T> implements StreamTransformer {
   final Stream<bool> _signal;
 

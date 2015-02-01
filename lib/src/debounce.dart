@@ -7,16 +7,16 @@ part of stream_transformers;
 ///
 /// **Example:**
 ///
-///   var controller = new StreamController();
+///     var controller = new StreamController();
 ///
-///   var debounced = controller.stream.transform(new Debounce(new Duration(seconds:1)));
-///   debounced.listen(print);
+///     var debounced = controller.stream.transform(new Debounce(new Duration(seconds:1)));
+///     debounced.listen(print);
 ///
-///   controller.add(1);
-///   controller.add(2);
-///   controller.add(3);
+///     controller.add(1);
+///     controller.add(2);
+///     controller.add(3);
 ///
-///   // Prints: 3
+///     // Prints: 3
 class Debounce<T> implements StreamTransformer<T, T> {
   final Duration _duration;
 

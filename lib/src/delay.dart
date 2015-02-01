@@ -6,11 +6,11 @@ part of stream_transformers;
 ///
 /// **Example:**
 ///
-///   var controller = new StreamController();
-///   var delayed = controller.stream.transform(new Delay(new Duration(seconds: 2)));
+///     var controller = new StreamController();
+///     var delayed = controller.stream.transform(new Delay(new Duration(seconds: 2)));
 ///
-///   // source:              asdf----
-///   // source.delayed(2):   --a--s--d--f---
+///     // source:              asdf----
+///     // source.delayed(2):   --a--s--d--f---
 class Delay<T> implements StreamTransformer<T, T> {
   final Duration _duration;
 

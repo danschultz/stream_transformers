@@ -10,14 +10,14 @@ part of stream_transformers;
 ///
 /// **Example:**
 ///
-///   var button = new ButtonElement();
+///     var button = new ButtonElement();
 ///
-///   var clickCount = button.onClick.transform(new Scan(0, (previous, current) => previous + 1));
+///     var clickCount = button.onClick.transform(new Scan(0, (previous, current) => previous + 1));
 ///
-///   clickCount.listen(print);
+///     clickCount.listen(print);
 ///
-///   // [button click] .. prints: 1
-///   // [button click] .. prints: 2
+///     // [button click] .. prints: 1
+///     // [button click] .. prints: 2
 class Scan<A, R> implements StreamTransformer {
   final R _initialValue;
   final Function _combine;

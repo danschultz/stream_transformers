@@ -8,18 +8,18 @@ part of stream_transformers;
 ///
 /// **Example:**
 ///
-///   var controller = new StreamController();
-///   var signal = new StreamController();
+///     var controller = new StreamController();
+///     var signal = new StreamController();
 ///
-///   var whenStream = controller.stream.transform(new When(signal.stream));
+///     var whenStream = controller.stream.transform(new When(signal.stream));
 ///
-///   whenStream.listen(print);
+///     whenStream.listen(print);
 ///
-///   controller.add(1);
-///   signal.add(true);
-///   controller.add(2); // Prints: 2
-///   signal.add(false);
-///   controller.add(3);
+///     controller.add(1);
+///     signal.add(true);
+///     controller.add(2); // Prints: 2
+///     signal.add(false);
+///     controller.add(3);
 class When<T> implements StreamTransformer<T, T> {
   final Stream<bool> _toggle;
 
