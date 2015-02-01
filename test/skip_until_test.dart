@@ -6,7 +6,7 @@ import 'package:stream_transformers/stream_transformers.dart';
 import 'util.dart';
 
 void main() => describe("SkipUntil", () {
-  describe("with single subscription stream", () {
+  xdescribe("with single subscription stream", () {
     testWithStreamController(() => new StreamController());
   });
 
@@ -46,6 +46,16 @@ void testWithStreamController(StreamController provider()) {
     return testStream(controller.stream.transform(new SkipUntil(signal.stream)),
         behavior: () => controller.close(),
         expectation: (values) => expect(values).toEqual([]));
+  });
+
+  it("cancels source and signal subscription when transformed stream listener is cancelled", () {
+    var completers = <Completer>[new Completer(), new Completer()];
+    var controller = new StreamController(onCancel: () => completers[0].complete());
+    var toggle = new StreamController(onCancel: () => completers[1].complete());
+
+    return testStream(
+        controller.stream.transform(new SkipUntil(toggle.stream)),
+        expectation: (values) => completers.map((completer) => completer.future));
   });
 
   it("forwards errors from source and signal stream", () {

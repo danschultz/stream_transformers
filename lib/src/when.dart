@@ -26,13 +26,14 @@ class When<T> implements StreamTransformer<T, T> {
   When(Stream<bool> toggle) : _toggle = toggle;
 
   Stream<T> bind(Stream<T> stream) {
-    var input = stream.asBroadcastStream();
+    var input = stream.asBroadcastStream(onCancel: (subscription) => subscription.cancel());
+
     return _bindStream(like: stream, onListen: (EventSink<T> sink) {
       return _toggle
           .transform(new FlatMapLatest((isToggled) {
             return isToggled ? input : new Stream.fromIterable([]);
           }))
-          .transform(new TakeUntil.fromFuture(input.length))
+          .transform(new TakeUntil(new _EventStream(input).where((event) => event.isEnd)))
           .listen((value) => sink.add(value), onError: sink.addError);
     });
   }

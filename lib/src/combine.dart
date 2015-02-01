@@ -1,4 +1,4 @@
-part of frappe.transformers;
+part of stream_transformers;
 
 /// Combines the latest values of two streams using a two argument function.
 /// The combining function will not be called until each stream delivers its
@@ -36,7 +36,7 @@ class Combine<A, B, R> implements StreamTransformer<A, R> {
       return values
           .where((values) => values.length == streams.length)
           .map((values) => streams.map((stream) => values[stream]).toList(growable: false))
-          .listen((combined) => sink.add(combined), onError: sink.addError);
+          .listen((combined) => sink.add(combined), onError: sink.addError, onDone: sink.close);
     });
   }
 
@@ -51,7 +51,8 @@ class Combine<A, B, R> implements StreamTransformer<A, R> {
     return _bindStream(like: stream, onListen: (EventSink<R> sink) {
       return Combine.all([stream, _other]).listen(
           (values) => sink.add(_combiner(values.first, values.last)),
-          onError: sink.addError);
+          onError: sink.addError,
+          onDone: sink.close);
     });
   }
 }

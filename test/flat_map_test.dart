@@ -83,16 +83,29 @@ void testWithStreamController(StreamController provider()) {
     return result.then((values) => expect(values).toEqual([1, 2]));
   });
 
-  it("cancels subscriptions from spawned streams when transformed stream's listener is cancelled", () {
-    var completers = <Completer>[new Completer(), new Completer()];
+  it("cancels transformed and spawned streams when input stream is cancelled", () {
+    var completers = <Completer>[new Completer(), new Completer(), new Completer()];
     var controllers = <StreamController>[
         new StreamController(onCancel: () => completers[0].complete()),
-        new StreamController(onCancel: () => completers[1].complete())];
+        new StreamController(onCancel: () => completers[1].complete()),
+        new StreamController(onCancel: () => completers[2].complete())];
 
-    return testStream(controller.stream.transform(new FlatMap((value) => controllers[value].stream)),
-        behavior: () {
-          controller..add(0)..add(1)..close();
-        },
+    return testStream(
+        controllers[0].stream.transform(new FlatMap((value) => controllers[value].stream)),
+        behavior: () => controllers[0]..add(1)..add(2),
+        expectation: (values) => Future.wait(completers.map((completer) => completer.future)));
+  });
+
+  it("cancels subscriptions from spawned streams when transformed stream's listener is closed", () {
+    var completers = <Completer>[new Completer(), new Completer(), new Completer()];
+    var controllers = <StreamController>[
+        new StreamController(onCancel: () => completers[0].complete()),
+        new StreamController(onCancel: () => completers[1].complete()),
+        new StreamController(onCancel: () => completers[2].complete())];
+
+    return testStream(
+        controllers[0].stream.transform(new FlatMap((value) => controllers[value].stream)),
+        behavior: () => controllers[0]..add(1)..add(2)..close(),
         expectation: (values) => Future.wait(completers.map((completer) => completer.future)));
   });
 

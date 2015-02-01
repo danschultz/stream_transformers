@@ -45,12 +45,13 @@ void testWithStreamController(StreamController provider()) {
     return result.then((values) => expect(values).toEqual([]));
   });
 
-  it("cancels signal subscription when transformed stream listener is cancelled", () {
-    var completer = new Completer();
-    var signal = new StreamController(onCancel: () => completer.complete());
+  it("cancels source and signal subscriptions when transformed stream listener is cancelled", () {
+    var completers = <Completer>[new Completer(), new Completer()];
+    var controller = new StreamController(onCancel: () => completers[0].complete());
+    var signal = new StreamController(onCancel: () => completers[1].complete());
 
     return testStream(controller.stream.transform(new TakeUntil(signal.stream)),
-        expectation: (values) => completer.future);
+        expectation: (values) => Future.wait(completers.map((completer) => completer.future)));
   });
 
   it("forwards errors from source and signal stream", () {

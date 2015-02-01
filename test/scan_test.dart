@@ -42,6 +42,15 @@ void testWithStreamController(StreamController provider()) {
     return stream.toList().then((values) => expect(values).toEqual([0]));
   });
 
+  it("cancels source listener when transformed stream is cancelled", () {
+    var complete = new Completer();
+    var controller = new StreamController(onCancel: complete.complete);
+
+    return testStream(
+        controller.stream.transform(new Scan(0, (a, b) => a + b)),
+        expectation: (_) => complete.future);
+  });
+
   it("forwards errors from source stream", () {
     return testErrorsAreForwarded(
         controller.stream.transform(new Scan(0, (a, b) => a + b)),

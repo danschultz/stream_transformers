@@ -1,4 +1,4 @@
-part of frappe.transformers;
+part of stream_transformers;
 
 /// Ignores events for a given duration, then delivers the last event in
 /// the stream after the duration has passed. Errors occurring on the

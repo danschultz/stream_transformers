@@ -51,6 +51,29 @@ void testWithStreamController(StreamController provider()) {
         expectation: (values) => expect(values).toEqual([1, 2, 3]));
   });
 
+  it("cancels source and signal stream when source stream is closed", () {
+    var completerA = new Completer();
+    var completerB = new Completer();
+    var controller = new StreamController(onCancel: completerA.complete);
+    var signal = new StreamController(onCancel: completerB.complete);
+
+    return testStream(
+        controller.stream.transform(new BufferWhen(signal.stream)),
+        behavior: () => controller.close(),
+        expectation: (_) => Future.wait([completerA.future, completerB.future]));
+  });
+
+  it("cancels source and signal stream when source stream is cancelled", () {
+    var completerA = new Completer();
+    var completerB = new Completer();
+    var controller = new StreamController(onCancel: completerA.complete);
+    var signal = new StreamController(onCancel: completerB.complete);
+
+    return testStream(
+        controller.stream.transform(new BufferWhen(signal.stream)),
+        expectation: (_) => Future.wait([completerA.future, completerB.future]));
+  });
+
   it("forwards errors from either source stream", () {
     return testErrorsAreForwarded(
         controller.stream.transform(new BufferWhen(signal.stream)),

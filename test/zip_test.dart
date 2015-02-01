@@ -69,6 +69,16 @@ void testWithStreamController(StreamController provider()) {
         expectation: (errors) => expect(errors).toEqual([1, 2]));
   });
 
+  it("cancels source streams when transformed stream is cancelled", () {
+    var completers = <Completer>[new Completer(), new Completer()];
+    var controllerA = new StreamController(onCancel: () => completers[0].complete());
+    var controllerB = new StreamController(onCancel: () => completers[1].complete());
+
+    return testStream(
+        controllerA.stream.transform(new Zip(controllerB.stream, (a, b) => a + b)),
+        expectation: (_) => Future.wait(completers.map((completer) => completer.future)));
+  });
+
   it("returns a stream of the same type", () {
     var stream = controllerA.stream.transform(new Zip(controllerB.stream, (a, b) => a + b));
     expect(stream.isBroadcast).toBe(controllerA.stream.isBroadcast);

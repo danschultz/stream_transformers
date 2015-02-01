@@ -60,6 +60,16 @@ void testWithStreamController(StreamController provider()) {
         expectation: (values) => expect(values).toEqual([2]));
   });
 
+  it("cancels source and signal subscription when transformed stream listener is cancelled", () {
+    var completers = <Completer>[new Completer(), new Completer()];
+    var controller = new StreamController(onCancel: () => completers[0].complete());
+    var toggle = new StreamController(onCancel: () => completers[1].complete());
+
+    return testStream(
+        controller.stream.transform(new When(toggle.stream)),
+        expectation: (values) => Future.wait(completers.map((completer) => completer.future)));
+  });
+
   it("forwards errors from source and toggle stream", () {
     return testErrorsAreForwarded(
         controller.stream.transform(new When(toggle.stream)),

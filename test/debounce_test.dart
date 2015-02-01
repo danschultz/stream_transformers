@@ -47,6 +47,15 @@ void testWithStreamController(StreamController provider()) {
     });
   });
 
+  it("cancels input stream when transformed stream is cancelled", () {
+    var completerA = new Completer();
+    var controller = new StreamController(onCancel: completerA.complete);
+
+    return testStream(
+        controller.stream.transform(new Debounce(duration)),
+        expectation: (_) => completerA.future);
+  });
+
   it("doesn't debounce errors", () {
     return testErrorsAreForwarded(
         controller.stream.transform(new Debounce(duration)),

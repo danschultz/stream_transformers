@@ -1,4 +1,4 @@
-part of frappe.transformers;
+part of stream_transformers;
 
 /// Throttles the delivery of each event by a given duration. Errors occurring
 /// on the source stream will not be delayed. If the source stream is a broadcast

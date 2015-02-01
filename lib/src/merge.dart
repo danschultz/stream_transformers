@@ -52,7 +52,17 @@ class Merge<S, T> implements StreamTransformer {
       subscriptionB.resume();
     }
 
-    controller = _createControllerLikeStream(stream: stream, onListen: onListen, onPause: onPause, onResume: onResume);
+    void onCancel() {
+      subscriptionA.cancel();
+      subscriptionB.cancel();
+    }
+
+    controller = _createControllerLikeStream(
+        stream: stream,
+        onListen: onListen,
+        onPause: onPause,
+        onResume: onResume,
+        onCancel: onCancel);
 
     Future.wait([completerA.future, completerB.future]).then((_) => controller.close());
 
