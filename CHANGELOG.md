@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0 (02/01/2015)
+- Changed the behavior of debounce to debounce the first value [[#5](https://github.com/danschultz/stream_transformers/issues/5)]
+- Rename `StreamConverter` to `Mapper`, and generalized type signature to `R Mapper<A,R>(A value)` [[#10](https://github.com/danschultz/stream_transformers/issues/10)]
+- Make sure errors for transformers are forwarded as documented
+- Make sure internal subscriptions are cancelled when the transformed stream subscriptions are cancelled
+
 ## 0.1.0+3 (01/25/2015)
 - Fixed [issue #6](https://github.com/danschultz/stream_transformers/issues/6) where `Scan` doesn't include the initial value in the transformed stream.
 
