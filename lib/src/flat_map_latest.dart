@@ -20,12 +20,17 @@ class FlatMapLatest<S, T> implements StreamTransformer<S, T> {
 
   Stream<T> bind(Stream<S> stream) {
     var input = stream.asBroadcastStream(onCancel: (subscription) => subscription.cancel());
+    StreamSubscription doneSubscription;
 
-    return _bindStream(like: stream, onListen: (EventSink<T> sink) {
-      var done = input.handleError((e) => e);
+    StreamSubscription onListen(EventSink<T> sink) {
+      var done = new StreamController.broadcast(sync: true);
+      doneSubscription = input.listen((value) => done.add(true), onError: (_) {}, onDone: () => done.close());
+
       return input
-          .transform(new FlatMap((value) => _convert(value).transform(new TakeUntil(done))))
+          .transform(new FlatMap((value) => _convert(value).transform(new TakeUntil(done.stream))))
           .listen((value) => sink.add(value), onError: sink.addError, onDone: () => sink.close());
-    });
+    }
+
+    return _bindStream(like: stream, onListen: onListen, onCancel: () => doneSubscription.cancel());
   }
 }
