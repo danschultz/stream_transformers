@@ -39,12 +39,14 @@ void testWithStreamController(StreamController providerA()) {
   });
 
   it("returned stream closes when both streams are done", () {
-    return testStream(controllerA.stream.transform(new Merge(controllerB.stream)),
-    behavior: () {
-      controllerA.close();
-      controllerB.close();
-    },
-    expectation: (values) => expect(values).toEqual([]));
+    var completer = new Completer();
+    var stream = controllerA.stream.transform(new Merge(controllerB.stream));
+    stream.listen(null, onDone: completer.complete);
+
+    controllerA.close();
+    controllerB.close();
+
+    return completer.future;
   });
 
   it("cancels input streams when source streams are closed", () {
