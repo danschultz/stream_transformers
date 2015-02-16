@@ -6,7 +6,7 @@ import 'package:stream_transformers/stream_transformers.dart';
 import 'util.dart';
 
 void main() => describe("SkipUntil", () {
-  xdescribe("with single subscription stream", () {
+  describe("with single subscription stream", () {
     testWithStreamController(() => new StreamController());
   });
 
