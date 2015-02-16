@@ -13,6 +13,7 @@ part 'src/buffer_when.dart';
 part 'src/combine.dart';
 part 'src/debounce.dart';
 part 'src/delay.dart';
+part 'src/do_action.dart';
 part 'src/event_stream.dart';
 part 'src/flat_map.dart';
 part 'src/flat_map_latest.dart';

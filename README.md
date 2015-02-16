@@ -12,6 +12,7 @@ These transformers are used internally by [Frappe]. If you're looking for a more
 * [Combine](#combine)
 * [Debounce](#debounce)
 * [Delay](#delay)
+* [DoAction](#doaction)
 * [FlatMap](#flatmap)
 * [FlatMapLatest](#flatmaplatest)
 * [Merge](#merge)
@@ -107,6 +108,36 @@ var delayed = controller.stream.transform(new Delay(new Duration(seconds: 2)));
 
 // source:              asdf----
 // source.delayed(2):   --a--s--d--f---
+```
+
+### `DoAction`
+Invokes a side-effect function for each value, error and done event in the stream.
+
+This is useful for debugging, but also invoking `preventDefault` for browser events. Side effects will only be invoked once if the transformed stream has multiple subscribers.
+
+Errors occurring on the source stream will be forwarded to the returned stream, even when passing an error handler to `DoAction`. If the source stream is a broadcast stream, then the transformed stream will also be a broadcast stream.
+
+**Example:**
+
+```dart
+var controller = new StreamController();
+var sideEffect = new DoAction((value) => print("Do Next: $value"),
+    onError: (error) => print("Do Error: $error"),
+    onDone: () => print("Do Done"));
+var stream = controller.stream.transform(sideEffect);
+
+stream.listen((value) => print("Next: $value"),
+    onError: (e) => print("Error: $e"),
+    onDone: () => print("Done"));
+
+controller..add(1)..add(2)..close();
+
+// Do Next: 1
+// Next: 1
+// Do Next: 2
+// Next: 2
+// Do Done
+// Done
 ```
 
 ### `FlatMap`
