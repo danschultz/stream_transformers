@@ -17,6 +17,7 @@ These transformers are used internally by [Frappe]. If you're looking for a more
 * [FlatMapLatest](#flatmaplatest)
 * [Merge](#merge)
 * [SampleOn](#sampleon)
+* [SamplePeriodically](#sampleperiodically)
 * [Scan](#scan)
 * [SkipUntil](#skipuntil)
 * [TakeUntil](#takeuntil)
@@ -205,6 +206,25 @@ var source = new Stream.periodic(new Duration(seconds: 1), (i) => i);
 var trigger = new Stream.periodic(new Duration(seconds: 2), (i) => i).take(3);
 
 var stream = source.stream.transform(new SampleOn(trigger.stream));
+
+stream.listen(print);
+
+// 0
+// 2
+// 4
+```
+
+### `SamplePeriodically`
+Takes the latest value of the source stream at a specified interval.
+
+Errors that happen on the source stream will be forwarded to the transformed stream. If the source stream is a broadcast stream, then the transformed stream will also be a broadcast stream.
+
+**Example:**
+
+```dart
+// values start at 0
+var source = new Stream.periodic(new Duration(seconds: 1), (i) => i);
+var stream = source.stream.transform(new SamplePeriodically(new Duration(seconds: 2)).take(3);
 
 stream.listen(print);
 
