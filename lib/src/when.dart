@@ -31,7 +31,13 @@ class When<T> implements StreamTransformer<T, T> {
     return _bindStream(like: stream, onListen: (EventSink<T> sink) {
       return _toggle
           .transform(new FlatMapLatest((isToggled) {
-            return isToggled ? input : new Stream.fromIterable([]);
+            if (isToggled) {
+              return _bindStream(onListen: (EventSink<T> sink) {
+                return input.listen(sink.add, onError: sink.addError, onDone: sink.close);
+              });
+            } else {
+              return new Stream.fromIterable([]);
+            }
           }))
           .transform(new TakeUntil(new _EventStream(input).where((event) => event.isEnd)))
           .listen((value) => sink.add(value), onError: sink.addError);

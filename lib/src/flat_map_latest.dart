@@ -23,7 +23,7 @@ class FlatMapLatest<S, T> implements StreamTransformer<S, T> {
     StreamSubscription doneSubscription;
 
     StreamSubscription onListen(EventSink<T> sink) {
-      var done = new StreamController.broadcast(sync: true);
+      var done = new StreamController.broadcast();
       doneSubscription = input.listen((value) => done.add(true), onError: (_) {}, onDone: () => done.close());
 
       return input
