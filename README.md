@@ -16,6 +16,7 @@ These transformers are used internally by [Frappe]. If you're looking for a more
 * [FlatMap](#flatmap)
 * [FlatMapLatest](#flatmaplatest)
 * [Merge](#merge)
+* [SampleOn](#sampleon)
 * [Scan](#scan)
 * [SkipUntil](#skipuntil)
 * [TakeUntil](#takeuntil)
@@ -191,8 +192,29 @@ controller2.add(4); // Prints: 4
 
 Use the static function `Merge.all(List<Stream>)` to merge all streams of a list into a single stream.
 
+### `SampleOn`
+Takes the latest value of the source stream whenever the trigger stream produces an event.
+
+Errors that happen on the source stream will be forwarded to the transformed stream. If the source stream is a broadcast stream, then the transformed stream will also be a broadcast stream.
+
+**Example:**
+
+```dart
+// values start at 0
+var source = new Stream.periodic(new Duration(seconds: 1), (i) => i);
+var trigger = new Stream.periodic(new Duration(seconds: 2), (i) => i).take(3);
+
+var stream = source.stream.transform(new SampleOn(trigger.stream));
+
+stream.listen(print);
+
+// 0
+// 2
+// 4
+```
+
 ### `Scan`
-Reduces the values of a stream into a single value by using an initial value and an accumulator function. The function is passed the previous accumulated value and the current value of the stream. This is useful for maintaining state using a stream. Errors occurring on the source stream will be forwarded to the transformed stream. If the source streamis a broadcast stream, then the transformed stream will also be abroadcast stream.
+Reduces the values of a stream into a single value by using an initial value and an accumulator function. The function is passed the previous accumulated value and the current value of the stream. This is useful for maintaining state using a stream. Errors occurring on the source stream will be forwarded to the transformed stream. If the source stream is a broadcast stream, then the transformed stream will also be abroadcast stream.
 
 **Example:**
 
