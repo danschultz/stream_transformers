@@ -11,6 +11,7 @@ import 'dart:collection';
 
 part 'src/buffer_when.dart';
 part 'src/combine.dart';
+part 'src/concat.dart';
 part 'src/debounce.dart';
 part 'src/delay.dart';
 part 'src/do_action.dart';

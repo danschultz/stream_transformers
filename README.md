@@ -10,6 +10,7 @@ These transformers are used internally by [Frappe]. If you're looking for a more
 
 * [BufferWhen](#bufferwhen)
 * [Combine](#combine)
+* [Concat](#concat)
 * [Debounce](#debounce)
 * [Delay](#delay)
 * [DoAction](#doaction)
@@ -81,6 +82,29 @@ controller1.add(1);
 controller2.add(2); // Prints: [1, 2]
 controller1.add(3); // Prints: [3, 2]
 controller2.add(4); // Prints: [3, 4]
+```
+
+### `Concat`
+Concatenates two streams into one stream by delivering the values of the source stream, and then delivering the values of the other stream once the source stream completes. This means that it's possible that events from the second stream might not be included if the source stream hasn't completed. Use `Concat.all()` to concatenate many streams.
+
+Errors will be forwarded from either stream, whether or not the source stream has completed. If the source stream is a broadcast stream, then the transformed stream will also be a broadcast stream.
+
+**Example:**
+
+```dart
+var source = new StreamController();
+var other = new StreamController();
+
+var stream = source.stream.transform(new Concat(other.stream));
+stream.listen(print);
+
+other..add(1)..add(2);
+source..add(3)..add(4)..close();
+
+// 3
+// 4
+// 1
+// 2
 ```
 
 ### `Debounce`
