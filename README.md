@@ -19,6 +19,7 @@ These transformers are used internally by [Frappe]. If you're looking for a more
 * [SampleOn](#sampleon)
 * [SamplePeriodically](#sampleperiodically)
 * [Scan](#scan)
+* [SelectFirst](#selectfirst)
 * [SkipUntil](#skipuntil)
 * [TakeUntil](#takeuntil)
 * [When](#when)
@@ -234,7 +235,7 @@ stream.listen(print);
 ```
 
 ### `Scan`
-Reduces the values of a stream into a single value by using an initial value and an accumulator function. The function is passed the previous accumulated value and the current value of the stream. This is useful for maintaining state using a stream. Errors occurring on the source stream will be forwarded to the transformed stream. If the source stream is a broadcast stream, then the transformed stream will also be abroadcast stream.
+Reduces the values of a stream into a single value by using an initial value and an accumulator function. The function is passed the previous accumulated value and the current value of the stream. This is useful for maintaining state using a stream. Errors occurring on the source stream will be forwarded to the transformed stream. If the source stream is a broadcast stream, then the transformed stream will also be a broadcast stream.
 
 **Example:**
 
@@ -247,6 +248,23 @@ clickCount.listen(print);
 
 // [button click] .. prints: 1
 // [button click] .. prints: 2
+```
+
+### `SelectFirst`
+Forwards events from the first stream to deliver an event.
+
+Errors are forwarded from both streams until a stream is selected. Once a stream is selected, only errors from the selected stream are forwarded. If the source stream is a broadcast stream, then the transformed stream will also be a broadcast stream.
+
+**Example:**
+
+```dart
+var stream1 = new Stream.periodic(new Duration(seconds: 1)).map((_) => "Stream 1");
+var stream2 = new Stream.periodic(new Duration(seconds: 2)).map((_) => "Stream 2");
+
+var selected = stream1.transform(new SelectFirst(stream2)).take(1);
+selected.listen(print);
+
+// Stream 1
 ```
 
 ### `SkipUntil`
