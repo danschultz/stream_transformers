@@ -20,6 +20,7 @@ part 'src/event_stream.dart';
 part 'src/flat_map.dart';
 part 'src/flat_map_latest.dart';
 part 'src/merge.dart';
+part 'src/merge_all.dart';
 part 'src/sample_on.dart';
 part 'src/sample_periodically.dart';
 part 'src/select_first.dart';

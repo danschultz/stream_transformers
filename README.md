@@ -18,6 +18,7 @@ These transformers are used internally by [Frappe]. If you're looking for a more
 * [FlatMap](#flatmap)
 * [FlatMapLatest](#flatmaplatest)
 * [Merge](#merge)
+* [MergeAll](#mergeall)
 * [SampleOn](#sampleon)
 * [SamplePeriodically](#sampleperiodically)
 * [Scan](#scan)
@@ -247,6 +248,29 @@ controller2.add(4); // Prints: 4
 ```
 
 Use the static function `Merge.all(List<Stream>)` to merge all streams of a list into a single stream.
+
+### `MergeAll`
+Combines the events from a stream of streams into a single stream.
+
+The returned stream will contain the errors occurring on any stream. If the source stream is a broadcast stream, then the transformed stream will also be a broadcast stream.
+
+**Example:**
+
+```dart
+var source = new StreamController();
+var stream1 = new Stream.fromIterable([1, 2]);
+var stream2 = new Stream.fromIterable([3, 4]);
+
+var merged = source.stream.transform(new MergeAll());
+source..add(stream1)..add(stream2);
+
+merged.listen(print);
+
+// 1
+// 2
+// 3
+// 4
+```
 
 ### `SampleOn`
 Takes the latest value of the source stream whenever the trigger stream produces an event.

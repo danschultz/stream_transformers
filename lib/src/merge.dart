@@ -21,9 +21,7 @@ part of stream_transformers;
 class Merge<S, T> implements StreamTransformer {
   /// Returns a stream that contains the events from a list of streams.
   static Stream all(Iterable<Stream> streams) {
-    return streams.skip(1).fold(streams.first, (Stream previous, current) {
-      return previous.transform(new Merge(current));
-    });
+    return new Stream.fromIterable(streams).transform(new MergeAll());
   }
 
   final Stream<T> _other;
@@ -67,5 +65,10 @@ class Merge<S, T> implements StreamTransformer {
     Future.wait([completerA.future, completerB.future]).then((_) => controller.close());
 
     return controller.stream;
+
+    // TODO(Dan): This would be the ideal implementation, but is causing some tests to fail.
+//    return _bindStream(like: stream, onListen: (EventSink sink) {
+//      return all([stream, _other]).listen(sink.add, onError: sink.addError, onDone: sink.close);
+//    });
   }
 }
