@@ -27,7 +27,7 @@ part of stream_transformers;
 class Concat<T> implements StreamTransformer<T, T> {
   static Stream all(Iterable<Stream> streams) {
     return _bindStream(like: streams.first, onListen: (EventSink sink) {
-      return new Stream.fromIterable(streams).asyncExpand((stream) => stream)
+      return new Stream.fromIterable(streams).transform(new ConcatAll())
           .listen(sink.add, onError: sink.addError, onDone: sink.close);
     });
   }
