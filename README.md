@@ -21,6 +21,7 @@ These transformers are used internally by [Frappe]. If you're looking for a more
 * [Scan](#scan)
 * [SelectFirst](#selectfirst)
 * [SkipUntil](#skipuntil)
+* [StartWith](#startwith)
 * [TakeUntil](#takeuntil)
 * [When](#when)
 * [Zip](#zip)
@@ -285,6 +286,23 @@ controller.add(2);
 signal.add(true);
 controller.add(3); // Prints: 3
 controller.add(4); // Prints: 4
+```
+
+### `StartWith`
+Prepends values to the beginning of a stream. Use `StartWith.many` to prepend multiple values.
+
+Errors on the source stream will be forwarded to the transformed stream. If the source stream is a broadcast stream, then the transformed stream will also be a broadcast stream.
+
+**Example:**
+
+```dart
+var source = new Stream.fromIterable([2, 3]);
+var stream = source.transform(new StartWith(1));
+stream.listen(print);
+
+// 1
+// 2
+// 3
 ```
 
 ### `TakeUntil`

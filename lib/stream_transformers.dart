@@ -23,6 +23,7 @@ part 'src/sample_periodically.dart';
 part 'src/select_first.dart';
 part 'src/scan.dart';
 part 'src/skip_until.dart';
+part 'src/start_with.dart';
 part 'src/take_until.dart';
 part 'src/typedefs.dart';
 part 'src/when.dart';
