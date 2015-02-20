@@ -282,9 +282,9 @@ Errors that happen on the source stream will be forwarded to the transformed str
 ```dart
 // values start at 0
 var source = new Stream.periodic(new Duration(seconds: 1), (i) => i);
-var trigger = new Stream.periodic(new Duration(seconds: 2), (i) => i).take(3);
+var trigger = new Stream.periodic(new Duration(seconds: 2), (i) => i);
 
-var stream = source.stream.transform(new SampleOn(trigger.stream));
+var stream = source.stream.transform(new SampleOn(trigger.stream)).take(3);
 
 stream.listen(print);
 

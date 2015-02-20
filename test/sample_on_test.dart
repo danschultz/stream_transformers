@@ -17,9 +17,9 @@ void main() => describe("SampleOn", () {
 
   it("works with periodic streams", () {
     var source = new Stream.periodic(new Duration(milliseconds: 50), (i) => i);
-    var sampler = new Stream.periodic(new Duration(milliseconds: 100), (i) => i).take(3);
+    var sampler = new Stream.periodic(new Duration(milliseconds: 100), (i) => i);
 
-    var stream = source.transform(new SampleOn(sampler));
+    var stream = source.transform(new SampleOn(sampler)).take(3);
     return stream.toList().then((values) => expect(values).toEqual([0, 2, 4]));
   });
 
@@ -82,6 +82,13 @@ void testWithStreamController(StreamController provider()) {
     var stream = controller.stream.transform(new SampleOn(trigger.stream));
     var result = stream.toList();
     controller.close();
+    return result.then((values) => expect(values).toEqual([]));
+  });
+
+  it("closes transformed stream when sample stream is done", () {
+    var stream = controller.stream.transform(new SampleOn(trigger.stream));
+    var result = stream.toList();
+    trigger.close();
     return result.then((values) => expect(values).toEqual([]));
   });
 
