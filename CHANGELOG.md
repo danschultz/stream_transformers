@@ -1,12 +1,12 @@
 # Changelog
 
 ## 0.3.0 (02/30/2015)
-- Add `Concat` [[#16](https://github.com/danschultz/stream_transformers/issues/15)]
+- Add `Concat` [[#15](https://github.com/danschultz/stream_transformers/issues/15)]
 - Add `ConcatAll` [[#16](https://github.com/danschultz/stream_transformers/issues/16)]
 - Add `DoAction` [[#4](https://github.com/danschultz/stream_transformers/issues/4)]
 - Add `MergeAll` [[#2](https://github.com/danschultz/stream_transformers/issues/2)]
 - Add `SampleOn` [[#1](https://github.com/danschultz/stream_transformers/issues/1)]
-- Add `SamplePeriodically` [[#4](https://github.com/danschultz/stream_transformers/issues/3)]
+- Add `SamplePeriodically` [[#3](https://github.com/danschultz/stream_transformers/issues/3)]
 - Add `SelectFirst` [[#13](https://github.com/danschultz/stream_transformers/issues/13)]
 - Add `StartWith` [[#14](https://github.com/danschultz/stream_transformers/issues/14)]
 - `FlatMap` now closes only when its source is closed.
