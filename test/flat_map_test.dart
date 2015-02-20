@@ -71,18 +71,6 @@ void testWithStreamController(StreamController provider()) {
     return result.then((values) => expect(values).toEqual([0, 1]));
   });
 
-  it("closes transformed stream once all spawned streams are closed", () {
-    var stream = controller.stream.transform(new FlatMap((value) => spawnedControllers[value].stream));
-    var result = stream.toList();
-
-    controller..add(1)..add(2);
-    spawnedControllers.forEach((key, controller) {
-      controller..add(key)..close();
-    });
-
-    return result.then((values) => expect(values).toEqual([1, 2]));
-  });
-
   it("cancels transformed and spawned streams when input stream is cancelled", () {
     var completers = <Completer>[new Completer(), new Completer(), new Completer()];
     var controllers = <StreamController>[

@@ -24,9 +24,10 @@ class FlatMap<S, T> implements StreamTransformer {
 
     StreamSubscription onListen(EventSink<T> sink) {
       var openStreams = <Stream>[];
+      var isDone = false;
 
-      void closeSinkIfDone(EventSink sink, Iterable<Stream> streams) {
-        if (streams.isEmpty) {
+      void closeSinkIfDone() {
+        if (isDone && openStreams.isEmpty) {
           sink.close();
         }
       }
@@ -39,13 +40,16 @@ class FlatMap<S, T> implements StreamTransformer {
             onError: sink.addError,
             onDone: () {
               openStreams.remove(mappedStream);
-              closeSinkIfDone(sink, openStreams);
+              closeSinkIfDone();
             }));
       }
 
       return stream.listen(
           onData,
-          onDone: () => closeSinkIfDone(sink, openStreams),
+          onDone: () {
+            isDone = true;
+            closeSinkIfDone();
+          },
           onError: (error, stackTrace) => sink.addError(error, stackTrace));
     };
 
@@ -55,6 +59,6 @@ class FlatMap<S, T> implements StreamTransformer {
       }
     }
 
-    return _bindStream(like: stream, onListen: onListen, onCancel: onCancel);
+    return _bindStream(like: stream, sync: true, onListen: onListen, onCancel: onCancel);
   }
 }
