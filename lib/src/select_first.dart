@@ -29,13 +29,14 @@ class SelectFirst implements StreamTransformer {
       var b = other.map((value) => {"value": value, "stream": other});
 
       var selected = a.transform(new Merge(b)).take(1);
-      var forwarded = selected.transform(new FlatMap((selected) {
-        var firstValue = selected["value"];
-        var stream = selected["stream"];
-        return new Stream.fromIterable([firstValue]).transform(new Merge(stream));
-      }));
 
-      return forwarded.listen(sink.add, onError: sink.addError, onDone: sink.close);
+      return selected
+          .asyncExpand((selected) {
+            var firstValue = selected["value"];
+            var stream = selected["stream"] as Stream;
+            return stream.transform(new StartWith(firstValue));
+          })
+          .listen(sink.add, onError: sink.addError, onDone: sink.close);
     });
   }
 }

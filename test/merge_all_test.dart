@@ -48,7 +48,7 @@ void testWithStreamController(StreamController provider()) {
         expectation: (values) => expect(values).toEqual([1, 2, 3, 4]));
   });
 
-  it("returned stream closes when contained streams are done", () {
+  it("returned stream closes when source stream is done and contained streams are done", () {
     var completer = new Completer();
     var stream = controller.stream.transform(new MergeAll());
     stream.listen(null, onDone: completer.complete);
@@ -56,7 +56,7 @@ void testWithStreamController(StreamController provider()) {
     var controller1 = new StreamController();
     var controller2 = new StreamController();
 
-    controller..add(controller1.stream)..add(controller2.stream);
+    controller..add(controller1.stream)..add(controller2.stream)..close();
     controller1.close();
     controller2.close();
 
