@@ -138,7 +138,14 @@ stream.listen(print);
 ```
 
 ### `Debounce`
-Ignores events for a given duration, then delivers the last event in the stream after the duration has passed. Errors occurring on the source stream will not be ignored. If the source stream is a broadcast stream, then the transformed stream will also be a broadcast stream.
+Delivers the last event in the stream after the duration has passed without receiving an event.
+
+Errors occurring on the source stream will not be ignored. If the source stream is a broadcast stream, then the transformed stream will also be a broadcast stream.
+
+```
+source:             asdf----asdf----
+source.debounce(2): -----f-------f--
+```
 
 **Example:**
 
