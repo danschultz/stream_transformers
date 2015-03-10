@@ -465,3 +465,4 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 [tracker]: https://github.com/frappe-dart/stream_transformers/issues
 [Frappe]: https://github.com/danschultz/frappe
 [test_runner]: https://pub.dartlang.org/packages/test_runner
+
