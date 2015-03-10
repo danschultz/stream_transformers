@@ -1,6 +1,7 @@
 # stream_transformers
 
 [![Build Status](https://travis-ci.org/danschultz/stream_transformers.svg)](https://travis-ci.org/danschultz/stream_transformers)
+[![Coverage Status](https://coveralls.io/repos/danschultz/stream_transformers/badge.svg?branch=master)](https://coveralls.io/r/danschultz/stream_transformers?branch=master)
 
 This library provides a set of stream transformers for Dart's `Stream` class.
 
