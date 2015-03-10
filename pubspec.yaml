@@ -1,7 +1,7 @@
 name: stream_transformers
 description: >
   A Dart package for transforming streams.
-version: 0.3.0+1
+version: 0.3.0+2
 author: Dan Schultz <schultz.t.dan@gmail.com>
 homepage: https://www.github.com/danschultz/stream_transformers
 dependencies:
