@@ -1,5 +1,7 @@
 # Changelog
 
+*Note:* Patch versions that only include documentation changes are omitted.
+
 ## 0.3.0 (02/30/2015)
 - Add `Concat` [[#15](https://github.com/danschultz/stream_transformers/issues/15)]
 - Add `ConcatAll` [[#16](https://github.com/danschultz/stream_transformers/issues/16)]
