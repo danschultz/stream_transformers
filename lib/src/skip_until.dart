@@ -26,6 +26,6 @@ class SkipUntil<T> implements StreamTransformer<T, T> {
   SkipUntil(Stream signal) : _signal = signal;
 
   Stream<T> bind(Stream<T> stream) {
-    return stream.transform(new When(_signal.map((_) => true)));
+    return stream.transform(new When<T>(_signal.map((_) => true)));
   }
 }

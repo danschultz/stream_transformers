@@ -36,8 +36,8 @@ class Zip<A, B, R> implements StreamTransformer<A, R> {
     var input = stream.asBroadcastStream(onCancel: (subscription) => subscription.cancel());
     var other = _other.asBroadcastStream(onCancel: (subscription) => subscription.cancel());
 
-    var bufferA = input.transform(new Scan(new Queue<A>(), appendToQueue));
-    var bufferB = other.transform(new Scan(new Queue<B>(), appendToQueue));
+    var bufferA = input.transform(new Scan<A, dynamic>(new Queue<A>(), appendToQueue));
+    var bufferB = other.transform(new Scan<B, dynamic>(new Queue<B>(), appendToQueue));
 
     var combined = Combine.all([bufferA, bufferB]) as Stream<List<Queue>>;
 

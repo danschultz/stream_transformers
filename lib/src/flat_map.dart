@@ -14,7 +14,7 @@ part of stream_transformers;
 ///
 ///     controller.add(1); // Prints: 2
 ///     controller.add(2); // Prints: 3
-class FlatMap<S, T> implements StreamTransformer {
+class FlatMap<S, T> implements StreamTransformer<S, T> {
   final Mapper<S, Stream<T>> _convert;
 
   FlatMap(Mapper<S, Stream<T>> convert) : _convert = convert;

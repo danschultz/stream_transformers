@@ -18,7 +18,7 @@ part of stream_transformers;
 ///     controller2.add(2); // Prints: 2
 ///     controller1.add(3); // Prints: 3
 ///     controller2.add(4); // Prints: 4
-class Merge<S, T> implements StreamTransformer {
+class Merge<S, T> implements StreamTransformer<S, T> {
   /// Returns a stream that contains the events from a list of streams.
   static Stream all(Iterable<Stream> streams) {
     return new Stream.fromIterable(streams).transform(new MergeAll());
@@ -28,7 +28,7 @@ class Merge<S, T> implements StreamTransformer {
 
   Merge(Stream<T> other) : _other = other;
 
-  Stream bind(Stream<S> stream) {
+  Stream<T> bind(Stream<S> stream) {
     StreamSubscription<S> subscriptionA;
     StreamSubscription<T> subscriptionB;
     var completerA = new Completer();

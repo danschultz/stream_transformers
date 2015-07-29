@@ -38,7 +38,7 @@ class SampleOn<T> implements StreamTransformer<T, T> {
       triggerSubscription = trigger.listen(null, onDone: () => triggerDone.add(true));
 
       return stream
-          .transform(new FlatMapLatest((value) {
+          .transform(new FlatMapLatest<T, T>((value) {
             return _bindStream(onListen: (EventSink<T> sink) {
               return trigger.listen((_) => sink.add(value), onError: sink.addError, onDone: sink.close);
             });

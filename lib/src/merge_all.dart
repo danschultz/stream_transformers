@@ -21,10 +21,10 @@ part of stream_transformers;
 ///     // 2
 ///     // 3
 ///     // 4
-class MergeAll<T extends Stream> implements StreamTransformer {
+class MergeAll<T extends Stream> implements StreamTransformer<T, T> {
   MergeAll();
 
-  Stream bind(Stream<T> stream) {
+  Stream<T> bind(Stream<T> stream) {
     return stream.transform(new FlatMap((stream) => stream));
   }
 }

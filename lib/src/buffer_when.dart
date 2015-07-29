@@ -21,7 +21,7 @@ part of stream_transformers;
 ///     controller.add(2);
 ///
 ///     buffered.listen(print); // Prints: 1
-class BufferWhen<T> implements StreamTransformer {
+class BufferWhen<T> implements StreamTransformer<T, T> {
   final Stream<bool> _signal;
 
   BufferWhen(Stream<bool> signal) : _signal = signal;
