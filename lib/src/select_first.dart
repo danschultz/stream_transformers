@@ -15,12 +15,12 @@ part of stream_transformers;
 ///     selected.listen(print);
 ///
 ///     // Stream 1
-class SelectFirst implements StreamTransformer {
+class SelectFirst<T> implements StreamTransformer<T, T> {
   final Stream _other;
 
   SelectFirst(Stream other) : _other = other;
 
-  Stream bind(Stream stream) {
+  Stream<T> bind(Stream<T> stream) {
     return _bindStream(like: stream, onListen: (EventSink sink) {
       var input = stream.asBroadcastStream(onCancel: (subscription) => subscription.cancel());
       var other = _other.asBroadcastStream(onCancel: (subscription) => subscription.cancel());
