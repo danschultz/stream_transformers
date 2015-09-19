@@ -3,7 +3,6 @@ library scan_test;
 import 'dart:async';
 import 'package:guinness/guinness.dart';
 import 'package:stream_transformers/stream_transformers.dart';
-import 'package:unittest/unittest.dart' show expectAsync;
 import 'util.dart';
 
 void main() => describe("Scan", () {
