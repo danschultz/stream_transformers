@@ -30,7 +30,7 @@ part of stream_transformers;
 ///     // Next: 2
 ///     // Do Done
 ///     // Done
-class DoAction<T> implements StreamTransformer {
+class DoAction<T> implements StreamTransformer<T, T> {
   final Function _onData;
   final Function _onError;
   final Function _onDone;

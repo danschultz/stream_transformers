@@ -18,7 +18,7 @@ part of stream_transformers;
 ///
 ///     // [button click] .. prints: 1
 ///     // [button click] .. prints: 2
-class Scan<A, R> implements StreamTransformer {
+class Scan<A, R> implements StreamTransformer<A, R> {
   final R _initialValue;
   final Function _combine;
 

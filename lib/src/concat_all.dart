@@ -29,7 +29,7 @@ part of stream_transformers;
 ///     // 4
 ///     // 1
 ///     // 2
-class ConcatAll<T extends Stream<R>, R> implements StreamTransformer {
+class ConcatAll<T extends Stream<R>, R> implements StreamTransformer<T, R> {
   ConcatAll();
 
   Stream<R> bind(Stream<T> stream) {
