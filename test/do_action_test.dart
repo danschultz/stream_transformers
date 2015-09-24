@@ -2,7 +2,6 @@ library do_action_test;
 
 import 'dart:async';
 import 'package:guinness/guinness.dart';
-import 'package:unittest/unittest.dart' show expectAsync;
 import 'package:stream_transformers/stream_transformers.dart';
 import 'util.dart';
 

@@ -29,6 +29,7 @@ StreamController _createControllerLikeStream({Stream stream, void onListen(), vo
   }
 }
 
+// TODO: This is not used.
 Future _cancelSubscriptions(Iterable<StreamSubscription> subscriptions) {
   var futures = subscriptions
       .map((subscription) => subscription.cancel())
