@@ -2,6 +2,11 @@
 
 *Note:* Patch versions that only include documentation changes are omitted.
 
+## 0.3.0+3 (09/16/2015)
+- Fix type issues found using DDC [[#23](https://github.com/danschultz/stream_transformers/pull/23)]
+- Thanks [Arron Washington], [Devon Carew]!
+
+
 ## 0.3.0 (02/30/2015)
 - Add `Concat` [[#15](https://github.com/danschultz/stream_transformers/issues/15)]
 - Add `ConcatAll` [[#16](https://github.com/danschultz/stream_transformers/issues/16)]
@@ -40,3 +45,7 @@ Initial version
 - Add `TakeUntil` transformer
 - Add `When` transformer
 - Add `Zip` transformer
+
+[Devon Carew]: https://github.com/devoncarew
+[Arron Washington]: https://github.com/radicaled
+
