@@ -228,7 +228,7 @@ Similar to `FlatMap`, but instead of including events from all spawned streams, 
 
 ```dart
 var controller = new StreamController();
-var latest = controller.stream.transform(new FlatMap((value) => new Stream.fromIterable([value + 1]));
+var latest = controller.stream.transform(new FlatMapLatest((value) => new Stream.fromIterable([value + 1]));
 
 latest.listen(print);
 
