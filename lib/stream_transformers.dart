@@ -10,6 +10,7 @@ import 'dart:async';
 import 'dart:collection';
 
 part 'src/buffer_when.dart';
+part 'src/buffer_with_count.dart';
 part 'src/combine.dart';
 part 'src/concat.dart';
 part 'src/concat_all.dart';
