@@ -50,16 +50,18 @@ void testWithStreamController(StreamController provider()) {
         expectation: (values) => expect(values).toEqual([[1, 2], [2, 3], [3, 4], [4]]));
   });
   
-  it("buffers 2, 2", () {
+  it("buffers 3, 2", () {
     return testStream(controller.stream.transform(new BufferWithCount(3, 2)),
         behavior: () {
           controller.add(1);
           controller.add(2);
           controller.add(3);
           controller.add(4);
+          controller.add(5);
+          controller.add(6);
           controller.close();
         },
-        expectation: (values) => expect(values).toEqual([[1, 2, 3], [2, 3, 4], [3, 4]]));
+        expectation: (values) => expect(values).toEqual([[1, 2, 3], [3, 4, 5], [5, 6]]));
   });
   
   it("closes transformed stream when source stream is done", () {
