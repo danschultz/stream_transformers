@@ -21,15 +21,14 @@ class BufferWithCount<T> implements StreamTransformer<T, T> {
   
   final int _count;
   final int _skip;
+  final int _bufferKeep;
   
   BufferWithCount(int count, [int skip]) : 
     _count = count, 
-    _skip = (skip == null) ? count : skip {
-    
-  }
+    _skip = (skip == null) ? count : skip,
+    _bufferKeep = count - ((skip == null) ? count : skip);
   
   Stream<T> bind(Stream<T> stream) {
-    final int i = _count - _skip;
     List<T> buffer = <T>[];
     
     return _bindStream(like: stream, onListen: (EventSink<List<T>> sink) {
@@ -40,13 +39,14 @@ class BufferWithCount<T> implements StreamTransformer<T, T> {
       }
       
       void onData(T data) {
-        if (_skip <= 0 || _skip > _count) sink.addError('skip has to be greater than zero and smaller than count');
+        if (_skip <= 0 || _skip > _count) 
+          sink.addError('skip has to be greater than zero and smaller than count');
         
         buffer.add(data);
         
         if (buffer.length == _count) {
           sink.add(buffer);
-          buffer = buffer.sublist(buffer.length - i);
+          buffer = buffer.sublist(_count - _bufferKeep);
         }
       }
 

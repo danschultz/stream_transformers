@@ -65,9 +65,9 @@ void testWithStreamController(StreamController provider()) {
   });
   
   it("closes transformed stream when source stream is done", () {
-    var stream = controller.stream.transform(new Scan(0, (a, b) => a + b));
+    var stream = controller.stream.transform(new BufferWithCount(2));
     controller..close();
-    return stream.toList().then((values) => expect(values).toEqual([0]));
+    return stream.toList().then((values) => expect(values).toEqual([]));
   });
 
   it("cancels source listener when transformed stream is cancelled", () {
@@ -75,17 +75,18 @@ void testWithStreamController(StreamController provider()) {
     var controller = new StreamController(onCancel: complete.complete);
 
     return testStream(
-        controller.stream.transform(new Scan(0, (a, b) => a + b)),
+        controller.stream.transform(new BufferWithCount(2)),
         expectation: (_) => complete.future);
   });
 
   it("forwards errors from source stream", () {
     return testErrorsAreForwarded(
-        controller.stream.transform(new Scan(0, (a, b) => a + b)),
+        controller.stream.transform(new BufferWithCount(2, 3)), // will throw because skip > count
         behavior: () {
-          controller..addError(1)..close();
+          controller.add(1);
+          controller.close();
         },
-        expectation: (errors) => expect(errors).toEqual([1]));
+        expectation: (errors) => expect(errors.length).toEqual(1));
   });
 
   it("returns a stream of the same type", () {
