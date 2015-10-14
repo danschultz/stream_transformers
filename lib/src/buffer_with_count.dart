@@ -25,7 +25,7 @@ class BufferWithCount<T> implements StreamTransformer<T, T> {
   BufferWithCount(int count, [int skip = 0]) : 
     _count = count, 
     _skip = skip {
-    if (_skip >= _count) throw new ArgumentError('skip cannot be larger that count');
+    if (_skip >= _count) throw new ArgumentError('skip cannot be larger than count, [skip=$_skip and count=$count]');
   }
   
   Stream<T> bind(Stream<T> stream) {
