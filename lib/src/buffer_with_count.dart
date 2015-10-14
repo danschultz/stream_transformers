@@ -39,8 +39,7 @@ class BufferWithCount<T> implements StreamTransformer<T, T> {
       }
       
       void onData(T data) {
-        if (_skip <= 0 || _skip > _count) 
-          sink.addError('skip has to be greater than zero and smaller than count');
+        if (_skip <= 0 || _skip > _count) sink.addError(new ArgumentError('skip has to be greater than zero and smaller than count'));
         
         buffer.add(data);
         
