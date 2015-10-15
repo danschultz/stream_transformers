@@ -79,14 +79,13 @@ void testWithStreamController(StreamController provider()) {
         expectation: (_) => complete.future);
   });
 
-  it("forwards errors from source stream", () {
+  it("forwards errors from either source stream", () {
     return testErrorsAreForwarded(
-        controller.stream.transform(new BufferWithCount(2, 3)), // will throw because skip > count
+        controller.stream.transform(new BufferWithCount(2)),
         behavior: () {
-          controller.add(1);
-          controller.close();
+          controller..addError(1)..close();
         },
-        expectation: (errors) => expect(errors.length).toEqual(1));
+        expectation: (errors) => expect(errors).toEqual([1]));
   });
 
   it("returns a stream of the same type", () {
